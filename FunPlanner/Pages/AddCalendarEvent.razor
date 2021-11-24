@@ -1,0 +1,51 @@
+﻿@page "/add-event"
+@using FunPlanner.Models.Calendar
+
+<PageTitle>Dodaj Wydarzenie</PageTitle>
+
+<h1>Dodaj Wydarzenie</h1>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+
+<EditForm Model="@calendarEvent" OnValidSubmit="@AddEvent">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="name" @bind-Value="calendarEvent.Name" />
+    <InputDate id="start" @bind-Value="calendarEvent.Start" />
+    <InputDate id="end" @bind-Value="calendarEvent.End" />
+    <InputText id="description" @bind-Value="calendarEvent.Description" />
+
+    <button class="btn btn-primary" type="submit">Potwierdź</button>
+</EditForm>
+
+<p>ilość wydarzeń: @eventCount</p> 
+
+@code {
+    private int currentCount = 0;
+    private int eventCount = 0;
+    private Event calendarEvent = new();
+    private ICollection<Event> events = new List<Event>();
+
+    private void IncrementCount()
+    {
+        currentCount++;
+        AddEvent();
+    }
+
+    private void AddEvent()
+    {
+        //var newEvent = new Event
+        //{
+        //    Start = calendarEvent.Start,
+        //    End = calendarEvent.End,
+        //    Name = calendarEvent.Name,
+        //    Description = calendarEvent.Description
+        //};
+
+        events.Add(calendarEvent);
+
+        eventCount = events.Count();
+    }
+}

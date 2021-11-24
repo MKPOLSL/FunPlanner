@@ -1,0 +1,72 @@
+﻿@page "/"
+@using FunPlanner.Components
+@using FunPlanner.Models.Calendar
+@using MudBlazor
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+ <div class="row">
+<!-- Calendar -->
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            <Calendar>
+                <DayTemplate Context="day">
+                    @{
+                        string currentDayClass = day.Date == DateTime.Now.Date ? "current-day" : "";
+                        string selectedDayClass = day == selectedDay ? "selected-day" : "";
+                    }
+                    @if(!day.IsEmpty)
+                    {
+                        <div class="day shadow-effect @currentDayClass @selectedDayClass" @onclick="() => selectedDay = day">
+                            <h3 class="ms-fontSize-24 ms-fontWeight-regular">@day.DayNumber</h3>
+                            @if(day.Events != null && day.Events.Count != 0)
+                            {
+                                var firstEvent = day.Events.FirstOrDefault();
+                                <div class="day-event">
+                                    @if(firstEvent.Name.Length > 25)
+                                    {
+                                        @firstEvent.Name.Substring(0, 25)<text>...</text>
+                                    }
+                                    else
+                                    {
+                                         @firstEvent.Name
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </DayTemplate>
+            </Calendar>
+       </div>
+
+
+         <!-- Day Menu -->
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <AddEvent SelectedDay="@selectedDay" />
+
+            <EventsList SelectedDay="@selectedDay" />
+        </div>
+ </div>
+
+
+<MudLayout>
+    <MudMainContent>
+        <MudDatePicker PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+<MudHidden Breakpoint="@Breakpoint.Xs">
+    <MudDatePicker PickerVariant="PickerVariant.Static" Orientation="Orientation.Landscape" Date="@(DateTime.Today.AddDays(1))" />
+</MudHidden>
+    </MudMainContent>
+</MudLayout>
+
+
+ @code {
+     private Day selectedDay = new Day
+    {
+        Date = DateTime.Now
+    };
+ }
