@@ -5,7 +5,7 @@
             <div class="calendar">
                 <div class="row">
                     <div class="col-sm-12 col-lg-2">
-                        <select  name="" id="" class="fluent-input" @onchange="SelectYear">
+                        <select  name="" id="" class="fluent-input" @bind="SelectedYear">
                             @for (int i = 2016; i < 2024; i++)
                             {
                                 <option>@i</option>
@@ -13,32 +13,32 @@
                         </select>
                     </div>
                     <div class="col-sm-12 col-lg-2">
-                        <select name="" id="" class="fluent-input" @onchange="SelectMonth">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">Sepetemper</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                        <select name="" id="" class="fluent-input" @bind="SelectedMonth">
+                            <option value="1">Styczeñ</option>
+                            <option value="2">Luty</option>
+                            <option value="3">Marzec</option>
+                            <option value="4">Kwiecieñ</option>
+                            <option value="5">Maj</option>
+                            <option value="6">Czerwiec</option>
+                            <option value="7">Lipiec</option>
+                            <option value="8">Sierpieñ</option>
+                            <option value="9">Wrzesieñ</option>
+                            <option value="10">PaŸdziernik</option>
+                            <option value="11">Listopad</option>
+                            <option value="12">Grudzieñ</option>
                         </select>
                     </div>
                 </div>
             <table class="calendar-table">
                 <thead>
                     <tr>
-                        <td>Sun</td>
-                        <td>Mon</td>
-                        <td>Tue</td>
-                        <td>Wed</td>
-                        <td>Thu</td>
-                        <td>Fri</td>
-                        <td>Sat</td>
+                        <th>Pon.</th>
+                        <th>Wt.</th>
+                        <th>Œr.</th>
+                        <th>Czw.</th>
+                        <th>Pt.</th>
+                        <th>Sob.</th>
+                        <th>Niedz.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,12 +55,39 @@
             </table>
         </div>
 
-       
-
-        
-
 @code 
 {
+    protected override async Task OnInitializedAsync()
+    {
+        //await SelectYear(new ChangeEventArgs { Value = "2021"});
+        //await SelectMonth(new ChangeEventArgs { Value = "Listopad"});
+        selectedYear = currentDate.Year;
+        selectedMonth = currentDate.Month;
+        UpdateCalendar();
+    }
+
+    private DateTime currentDate = DateTime.Now;
+    private int selectedYear = 0; 
+    private int selectedMonth = 0;
+
+    private int SelectedYear {
+        get => selectedYear;
+        set
+        {
+            selectedYear = value;
+            UpdateCalendar();
+        }
+    }
+
+    private int SelectedMonth {
+        get => selectedMonth;
+        set
+        {
+            selectedMonth = value;
+            UpdateCalendar();
+        }
+    }
+
     private Day selectedDay = new Day
     {
         Date = DateTime.Now
@@ -70,45 +97,17 @@
     public RenderFragment<Day> DayTemplate { get; set; }
 
 
-    private int year = 2020;
-    private int month = 05;
     private List<Day> days = new();
     private int rowsCount = 0;
-
-    async Task SelectYear(ChangeEventArgs e)
-    {
-        year = Convert.ToInt32(e.Value.ToString());
-        // Render Calendar
-        UpdateCalendar();
-
-        //await SyncEventsFromExternalProviderToCalendar();
-    }
-
-    async Task SelectMonth(ChangeEventArgs e)
-    {
-        month = Convert.ToInt32(e.Value.ToString());
-        // Render Calendar
-        UpdateCalendar();
-
-        //await SyncEventsFromExternalProviderToCalendar();
-    }
 
     void UpdateCalendar()
     {
         days = new List<Day>();
 
         // Calculate the number of empty days 
-        var firstDayDate = new DateTime(year, month, 1);
-        int weekDayNumber = (int)firstDayDate.DayOfWeek;
-        int numberOfEmptyDays = 0;
-        if (weekDayNumber == 7) // Sunday 
-        {
-            numberOfEmptyDays = 0;
-        }
-        else
-        {
-            numberOfEmptyDays = weekDayNumber;
-        }
+        var firstDayDate = new DateTime(SelectedYear, SelectedMonth, 1); //1.11.2021
+        int weekDayNumber = (int)firstDayDate.DayOfWeek; //pon -> 1
+        int numberOfEmptyDays = weekDayNumber - 1;
 
         // Add the empty days 
         for (int i = 0; i < numberOfEmptyDays; i++)
@@ -121,7 +120,7 @@
         }
 
         // Add the month days 
-        int numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
+        int numberOfDaysInMonth = DateTime.DaysInMonth(SelectedYear, SelectedMonth);
 
         for (int i = 0; i < numberOfDaysInMonth; i++)
         {
@@ -129,7 +128,7 @@
             {
                 DayNumber = i + 1,
                 IsEmpty = false,
-                Date = new DateTime(year, month, i + 1),
+                Date = new DateTime(SelectedYear, SelectedMonth, i + 1),
                 Events = new List<Event>()
             });
         }
