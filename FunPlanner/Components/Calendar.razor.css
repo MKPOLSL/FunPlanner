@@ -1,16 +1,17 @@
 ﻿.calendar-table {
     border-collapse: collapse;
     border-spacing: 0.5rem;
+    width: 80%;
+    table-layout: fixed;
 }
 
 td, th {
     border: 1px solid #999;
-    width: 5.2rem;
 }
 
 td {
     vertical-align: top;
-    height: 5.2rem;
+    height: 8rem;
     padding: 0.2rem;
 }
 
