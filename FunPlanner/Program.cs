@@ -1,8 +1,11 @@
 using FunPlanner;
+using FunPlannerShared.Controllers;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
+using Refit;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -10,13 +13,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-//MudBlazor
-//builder.Services.AddScoped<IDialogService, DialogService>();
-//builder.Services.AddScoped<Snackbar>();
-//builder.Services.AddScoped<MudDialogProvider>();
-//builder.Services.AddScoped<MudPopoverProvider>();
-//builder.Services.AddScoped<MudPopoverService>();
-
 builder.Services.AddMudServices();
+
+builder.Services
+    .AddRefitClient<IWeatherForecastController>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
+
+builder.Services
+    .AddRefitClient<IPersonController>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
 
 await builder.Build().RunAsync();

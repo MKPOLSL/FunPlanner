@@ -1,7 +1,10 @@
 ﻿@page "/"
 @using FunPlanner.Components
 @using FunPlanner.Models.Calendar
+@using FunPlannerShared.Controllers
 @using MudBlazor
+@inject IWeatherForecastController weather
+@inject IPersonController person
 
 <PageTitle>Index</PageTitle>
 
@@ -63,9 +66,17 @@ Welcome to your new app.
     </MudMainContent>
 </MudLayout>
 
+<Grid></Grid>
 
- @code {
-     private Day selectedDay = new Day
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var dups = await weather.Get();
+        var people = await person.Get();
+        await base.OnInitializedAsync();
+    }
+
+    private Day selectedDay = new Day
     {
         Date = DateTime.Now
     };
