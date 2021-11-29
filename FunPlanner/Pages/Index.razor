@@ -5,6 +5,7 @@
 @using MudBlazor
 @inject IWeatherForecastController weather
 @inject IPersonController person
+@inject IDialogService DialogService
 
 <PageTitle>Index</PageTitle>
 
@@ -56,6 +57,10 @@ Welcome to your new app.
         </div>
  </div>
 
+ <MudButton OnClick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
+    Dodaj wydarzenie
+</MudButton>
+
 
 <MudLayout>
     <MudMainContent>
@@ -80,4 +85,9 @@ Welcome to your new app.
     {
         Date = DateTime.Now
     };
+
+    private void OpenDialog()
+    {
+        DialogService.Show<AddEventDialog>("Dodaj wydarzenie");
+    }
  }

@@ -4,6 +4,7 @@ using FunPlannerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FunPlannerApi.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20211129141121_event-update")]
+    partial class eventupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +46,7 @@ namespace FunPlannerApi.Migrations
                     b.Property<bool>("IsLimited")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("Limit")
+                    b.Property<int>("Limit")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -65,25 +67,13 @@ namespace FunPlannerApi.Migrations
                     b.ToTable("CalendarEvents");
                 });
 
-            modelBuilder.Entity("FunPlannerShared.Data.Entities.EventParticipants", b =>
-                {
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PersonId", "EventId");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("EventParticipants");
-                });
-
             modelBuilder.Entity("FunPlannerShared.Data.Entities.Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CalendarEventId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -103,49 +93,32 @@ namespace FunPlannerApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CalendarEventId");
+
                     b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("FunPlannerShared.Data.Entities.CalendarEvent", b =>
                 {
                     b.HasOne("FunPlannerShared.Data.Entities.Person", "Creator")
-                        .WithMany("CreatedEvents")
+                        .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("FunPlannerShared.Data.Entities.EventParticipants", b =>
+            modelBuilder.Entity("FunPlannerShared.Data.Entities.Person", b =>
                 {
-                    b.HasOne("FunPlannerShared.Data.Entities.CalendarEvent", "CalendarEvent")
+                    b.HasOne("FunPlannerShared.Data.Entities.CalendarEvent", null)
                         .WithMany("Participants")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("FunPlannerShared.Data.Entities.Person", "Person")
-                        .WithMany("ParticipatedEvents")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CalendarEvent");
-
-                    b.Navigation("Person");
+                        .HasForeignKey("CalendarEventId");
                 });
 
             modelBuilder.Entity("FunPlannerShared.Data.Entities.CalendarEvent", b =>
                 {
                     b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("FunPlannerShared.Data.Entities.Person", b =>
-                {
-                    b.Navigation("CreatedEvents");
-
-                    b.Navigation("ParticipatedEvents");
                 });
 #pragma warning restore 612, 618
         }

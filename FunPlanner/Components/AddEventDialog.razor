@@ -1,0 +1,59 @@
+﻿@using FunPlannerShared.Controllers
+@using MudBlazor
+@using FunPlannerShared.Data.Entities
+@inject ISnackbar Snackbar
+@inject IEventController eventController
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.BookmarkAdd" Class="mr-3 mb-n1"/>
+            Dodaj wydarzenie
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="newEvent.Name" Label="Nazwa wdarzenia" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="newEvent.Description" Label="Opis" Variant="Variant.Text"></MudTextField>
+        <MudDatePicker @bind-date="startDate" Label="Start"/>
+        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="startSpan"/>
+        <MudDatePicker @bind-date="endDate" Label="Koniec"/>
+        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="endSpan"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Anuluj</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddEvent">Dodaj</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public CalendarEvent newEvent { get; set; } = new CalendarEvent();
+
+    private TimeSpan? startSpan { get; set; } = new TimeSpan(10, 15, 30);
+    private TimeSpan? endSpan { get; set; } = new TimeSpan(10, 15, 30);
+
+    private DateTime? startDate { get; set; } = DateTime.Now;
+    private DateTime? endDate { get; set; } = DateTime.Now;
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private async Task AddEvent()
+    {
+        if (startDate == null || startSpan == null || endDate == null || endSpan == null)
+        {
+            //tu throw bo niepełne dane
+        }
+        else
+        {
+            newEvent.Start = (DateTime)(startDate + startSpan);
+            newEvent.End = (DateTime)(endDate + endSpan);
+            await eventController.Post(newEvent);
+            Snackbar.Add("Dodano Wydarzenie", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(newEvent.Name));
+        }
+    }
+}

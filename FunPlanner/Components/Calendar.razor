@@ -105,8 +105,8 @@
         days = new List<Day>();
 
         // Calculate the number of empty days 
-        var firstDayDate = new DateTime(SelectedYear, SelectedMonth, 1); //1.11.2021
-        int weekDayNumber = (int)firstDayDate.DayOfWeek; //pon -> 1
+        var firstDayDate = new DateTime(SelectedYear, SelectedMonth, 1);
+        int weekDayNumber = (int)firstDayDate.DayOfWeek;
         int numberOfEmptyDays = weekDayNumber - 1;
 
         // Add the empty days 

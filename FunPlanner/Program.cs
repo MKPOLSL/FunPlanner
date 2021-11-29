@@ -23,4 +23,8 @@ builder.Services
     .AddRefitClient<IPersonController>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
 
+builder.Services
+    .AddRefitClient<IEventController>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
+
 await builder.Build().RunAsync();
