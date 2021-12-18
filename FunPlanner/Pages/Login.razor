@@ -1,0 +1,90 @@
+﻿@page "/authentication/login"
+
+@using System.Security.Claims
+@using FunPlanner.Models
+@using Microsoft.Extensions.Logging
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject UserAuthorizationService authorizationService
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+
+<center>
+    <div class="col-8 card">
+        <div class="col-12 row">
+            <p>&nbsp;</p>
+        </div>
+        <div class="col-12 row">
+            <div class="col-6" style="border-right:groove">
+                <img src="/images/logo.png" width="100%" height="90%" alt="LOGO" />
+            </div>
+            <div class="col-6" style="border-left:thick">
+                <EditForm Model="@userDto" OnValidSubmit="@SignIn">
+                    <DataAnnotationsValidator />
+                    <div>
+                        <br /><br /><br />
+                    </div>
+                    <div>
+                        <h3 style="font-weight:bold; color:grey">Warsztat - System Obsługi Napraw</h3>
+                    </div>
+                    <div>
+                        <br />
+                    </div>
+                    <div class="col-12 row login-input">
+                        <input type="text" class="form-control col-12" @bind="userDto.FirstName" placeholder="Nazwa użytkownika" />
+                    </div>
+                    <div class="col-12 row login-input">
+                        <input type="text" class="form-control col-12" @bind="userDto.LastName" placeholder="Nazwa użytkownika" />
+                    </div>
+                    <br />
+                    <div class="col-12 row login-input">
+                        <input type="password" class="form-control col-12" @bind="userDto.Password" placeholder="Hasło" />
+                    </div>
+                    <br />
+                    <div class="col-12 row login-input">
+                        <span class="col-12"></span>
+                        <input type="submit" class="form-control col-6 btn btn-primary" value="Zaloguj się" />
+                    </div>
+                    <ValidationSummary />
+                    <br />
+                    <div class="col-12 row" style="text-align:left; font-weight:bold; color: red">
+                        <span class="col-12">@ErrorMessage</span>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+        <div class="col-12 row">
+            <p>&nbsp;</p>
+        </div>
+    </div>
+</center>
+
+@code {
+    private UserLoginDto userDto;
+    public string LoginMessage { get; set; }
+    public string ErrorMessage { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        userDto = new UserLoginDto();
+        return base.OnInitializedAsync();
+    }
+
+    private async Task<bool> SignIn()
+    {
+        var user = await authorizationService.LoginUser(userDto);
+        if (user != null)
+        {
+            ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
+            //carContext.currentUser = user;
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Nie odnaleziono użytkownika z pasującymi danymi";
+        }
+        return await Task.FromResult(true);
+
+    }
+
+}
+

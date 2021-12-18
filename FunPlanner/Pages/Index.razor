@@ -4,9 +4,12 @@
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
 @using MudBlazor
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IWeatherForecastController weather
 @inject IPersonController person
 @inject IDialogService DialogService
+
 
 <PageTitle>Index</PageTitle>
 
@@ -59,6 +62,8 @@
 <MudButton OnClick="AddPerson" Variant="Variant.Filled" Color="Color.Primary">
     Dodaj osobę
 </MudButton>
+
+
 
 @code {
     protected override async Task OnInitializedAsync()

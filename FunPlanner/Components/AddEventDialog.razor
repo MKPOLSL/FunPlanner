@@ -3,6 +3,9 @@
 @using FunPlannerShared.Data.Entities
 @inject ISnackbar Snackbar
 @inject IEventController eventController
+@inject CustomAuthStateProvider authStateProvider
+@inject ILocalStorageService storage
+
 
 <MudDialog>
     <TitleContent>
@@ -59,7 +62,8 @@
         {
             newEvent.Start = (DateTime)(StartDate + StartSpan);
             newEvent.End = (DateTime)(EndDate + EndSpan);
-            newEvent.CreatorId = new Guid("5328954E-1C13-40ED-8E69-FBC8F7F987D9");
+            var state = await authStateProvider.GetAuthenticationStateAsync();
+            //storage.
             await eventController.Post(newEvent);
             Snackbar.Add("Dodano Wydarzenie", Severity.Success);
             MudDialog.Close(DialogResult.Ok(newEvent.Name));

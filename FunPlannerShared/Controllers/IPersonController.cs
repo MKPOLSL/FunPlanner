@@ -8,6 +8,9 @@ namespace FunPlannerShared.Controllers
         [Get("/Person")]
         Task<IEnumerable<Person>> Get();
 
+        [Get("/Person/{firstName}-{lastName}")]
+        Task<Person> GetByName(string firstName, string lastName);
+
         [Post("/Person")]
         Task Post(Person person);
     }
