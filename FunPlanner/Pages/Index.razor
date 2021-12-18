@@ -2,18 +2,13 @@
 @using FunPlanner.Components
 @using FunPlanner.Models.Calendar
 @using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Entities
 @using MudBlazor
 @inject IWeatherForecastController weather
 @inject IPersonController person
 @inject IDialogService DialogService
 
 <PageTitle>Index</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
 
  <div class="row">
 <!-- Calendar -->
@@ -61,22 +56,13 @@ Welcome to your new app.
     Dodaj wydarzenie
 </MudButton>
 
-
-<MudLayout>
-    <MudMainContent>
-        <MudDatePicker PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
-<MudHidden Breakpoint="@Breakpoint.Xs">
-    <MudDatePicker PickerVariant="PickerVariant.Static" Orientation="Orientation.Landscape" Date="@(DateTime.Today.AddDays(1))" />
-</MudHidden>
-    </MudMainContent>
-</MudLayout>
-
-<Grid></Grid>
+<MudButton OnClick="AddPerson" Variant="Variant.Filled" Color="Color.Primary">
+    Dodaj osobę
+</MudButton>
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        var dups = await weather.Get();
         var people = await person.Get();
         await base.OnInitializedAsync();
     }
@@ -88,6 +74,19 @@ Welcome to your new app.
 
     private void OpenDialog()
     {
-        DialogService.Show<AddEventDialog>("Dodaj wydarzenie");
+        DialogService.Show<AddEventDialog>("Dodaj wydarzenie", new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+    }
+
+    private async Task AddPerson()
+    {
+        var p = new Person
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Mateusz",
+                LastName = "Kulinowski",
+                Email = "matkul@email.email",
+                Points = 0
+            };
+        await person.Post(p);
     }
  }

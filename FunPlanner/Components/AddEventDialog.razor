@@ -8,16 +8,19 @@
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.BookmarkAdd" Class="mr-3 mb-n1"/>
-            Dodaj wydarzenie
+            Nowe wydarzenie
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="newEvent.Name" Label="Nazwa wdarzenia" Variant="Variant.Text"></MudTextField>
-        <MudTextField @bind-Value="newEvent.Description" Label="Opis" Variant="Variant.Text"></MudTextField>
-        <MudDatePicker @bind-date="startDate" Label="Start"/>
-        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="startSpan"/>
-        <MudDatePicker @bind-date="endDate" Label="Koniec"/>
-        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="endSpan"/>
+        <MudTextField @bind-Value="newEvent.Name" Label="Nazwa wydarzenia" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="newEvent.Description" Label="Opis" Variant="Variant.Text" Lines="4"></MudTextField>
+        <MudTextField @bind-Value="newEvent.Place" Label="Miejsce wydarzenia" Variant="Variant.Text"></MudTextField>
+        <MudDatePicker @bind-date="StartDate" Label="Start"/>
+        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="StartSpan"/>
+        <MudDatePicker @bind-date="EndDate" Label="Koniec"/>
+        <MudTimePicker Label="godzina" AmPm="false" @bind-Time="EndSpan"/>
+        <MudSwitch @bind-Checked="IsLimited" Label="Limit uczestników" Color="Color.Primary" />
+        <MudTextField T="int?" @bind-Value="newEvent.Limit" Label="Limit uczestników" Variant="Variant.Text" Disabled=@(!IsLimited)></MudTextField>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Anuluj</MudButton>
@@ -30,11 +33,16 @@
 
     [Parameter] public CalendarEvent newEvent { get; set; } = new CalendarEvent();
 
-    private TimeSpan? startSpan { get; set; } = new TimeSpan(10, 15, 30);
-    private TimeSpan? endSpan { get; set; } = new TimeSpan(10, 15, 30);
+    private TimeSpan? StartSpan { get; set; } = new TimeSpan(10, 15, 30);
+    private TimeSpan? EndSpan { get; set; } = new TimeSpan(10, 15, 30);
 
-    private DateTime? startDate { get; set; } = DateTime.Now;
-    private DateTime? endDate { get; set; } = DateTime.Now;
+    private DateTime? StartDate { get; set; } = DateTime.Now;
+    private DateTime? EndDate { get; set; } = DateTime.Now;
+
+    private bool IsLimited { get; set; } = false;
+    private int? Limit { get; set; }
+
+    private string Place { get; set; }
 
     private void Cancel()
     {
@@ -43,14 +51,15 @@
 
     private async Task AddEvent()
     {
-        if (startDate == null || startSpan == null || endDate == null || endSpan == null)
+        if (StartDate == null || StartSpan == null || EndDate == null || EndSpan == null)
         {
             //tu throw bo niepełne dane
         }
         else
         {
-            newEvent.Start = (DateTime)(startDate + startSpan);
-            newEvent.End = (DateTime)(endDate + endSpan);
+            newEvent.Start = (DateTime)(StartDate + StartSpan);
+            newEvent.End = (DateTime)(EndDate + EndSpan);
+            newEvent.CreatorId = new Guid("5328954E-1C13-40ED-8E69-FBC8F7F987D9");
             await eventController.Post(newEvent);
             Snackbar.Add("Dodano Wydarzenie", Severity.Success);
             MudDialog.Close(DialogResult.Ok(newEvent.Name));

@@ -9,7 +9,7 @@
 
         public Guid CreatorId { get; set; }
         public Person Creator { get; set; }
-        public ICollection<EventParticipants> Participants { get; set; }
+        public ICollection<EventParticipants>? Participants { get; set; }
 
         public bool EventRegistration { get; set; } = false;
         public bool IsLimited { get; set; } = false;
@@ -20,6 +20,7 @@
         {
             Name = "Nazwa";
             Description = "Opis";
+            Place = "Miejsce";
             Start = DateTime.Now;
             End = DateTime.Now;
         }

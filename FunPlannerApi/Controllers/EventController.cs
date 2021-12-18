@@ -28,5 +28,11 @@ namespace FunPlannerApi.Controllers
             Context.Add(calendarEvent);
             await Context.SaveChangesAsync();
         }
+
+        [HttpGet(Name = "GetEvents")]
+        public async Task<ICollection<CalendarEvent>> Get()
+        {
+            return await Context.Set<CalendarEvent>().ToListAsync();
+        }
     }
 }

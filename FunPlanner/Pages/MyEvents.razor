@@ -6,34 +6,35 @@
 @using MudBlazor
 @inject IWeatherForecastController weather
 @inject IPersonController person
+@inject IEventController eventContoller
 @inject IDialogService DialogService
 
 <PageTitle>My Events</PageTitle>
 
 <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
-        <MudTh>Nr</MudTh>
-        <MudTh>Sign</MudTh>
-        <MudTh>Name</MudTh>
-        <MudTh>Position</MudTh>
-        <MudTh>Molar mass</MudTh>
+        <MudTh>Nazwa</MudTh>
+        <MudTh>Organizator</MudTh>
+        <MudTh>Opis</MudTh>
+        <MudTh>Start</MudTh>
+        <MudTh>Koniec</MudTh>
     </HeaderContent>
     <RowTemplate>
-@*        <MudTd DataLabel="Nr">@context.Number</MudTd>
-        <MudTd DataLabel="Sign">@context.Sign</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Position" HideSmall="_hidePosition">@context.Position</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Molar</MudTd>*@
+        <MudTd DataLabel="Nazwa">@context.Name</MudTd>
+        <MudTd DataLabel="Twórca">@(context.Creator?.FirstName + context.Creator?.LastName)</MudTd>
+        <MudTd DataLabel="Opis">@context.Description</MudTd>
+        <MudTd DataLabel="Start" HideSmall="_hidePosition">@context.Start</MudTd>
+        <MudTd DataLabel="Koniec">@context.End</MudTd>
     </RowTemplate>
 </MudTable>
 
 @code {
-    private bool _hidePosition;
+    private bool _hidePosition = false;
     private bool _loading;
-    private IEnumerable<CalendarEvent> Elements = new List<CalendarEvent>();
+    private ICollection<CalendarEvent> Elements = new List<CalendarEvent>();
 
     protected override async Task OnInitializedAsync()
     {
-        //Elements = await httpClient.GetFromJsonAsync<List<Element>>("webapi/periodictable");
+        Elements = await eventContoller.Get();
     }
 }

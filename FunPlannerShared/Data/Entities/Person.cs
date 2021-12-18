@@ -7,7 +7,7 @@
         public string Email { get; set; }
         public int Points { get; set; }
 
-        public ICollection<CalendarEvent> CreatedEvents { get; set; }
-        public ICollection<EventParticipants> ParticipatedEvents { get; set; }
+        public ICollection<CalendarEvent>? CreatedEvents { get; set; }
+        public ICollection<EventParticipants>? ParticipatedEvents { get; set; }
     }
 }

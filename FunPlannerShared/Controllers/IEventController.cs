@@ -7,5 +7,8 @@ namespace FunPlannerShared.Controllers
     {
         [Post("/Event")]
         Task Post(CalendarEvent calendarEvent);
+
+        [Post("/Event")]
+        Task<ICollection<CalendarEvent>> Get();
     }
 }

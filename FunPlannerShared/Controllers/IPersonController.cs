@@ -7,5 +7,8 @@ namespace FunPlannerShared.Controllers
     {
         [Get("/Person")]
         Task<IEnumerable<Person>> Get();
+
+        [Post("/Person")]
+        Task Post(Person person);
     }
 }
