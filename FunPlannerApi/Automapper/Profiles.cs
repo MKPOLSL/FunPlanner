@@ -3,9 +3,9 @@ using FunPlannerShared.Data.Entities;
 
 namespace FunPlannerApi.Automapper
 {
-    public class EventProfile : Profile
+    public class Profiles : Profile
     {
-        public EventProfile()
+        public Profiles()
         {
             CreateMap<CalendarEventDto, CalendarEvent>();
         }

@@ -9,5 +9,6 @@
 
         public ICollection<CalendarEvent>? CreatedEvents { get; set; }
         public ICollection<EventParticipants>? ParticipatedEvents { get; set; }
+        public virtual Password Password { get; set; }
     }
 }

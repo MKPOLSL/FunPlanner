@@ -1,4 +1,5 @@
-﻿using FunPlannerShared.Data.Entities;
+﻿using FunPlannerShared.Data.Dtos;
+using FunPlannerShared.Data.Entities;
 using Refit;
 
 namespace FunPlannerShared.Controllers
@@ -13,5 +14,8 @@ namespace FunPlannerShared.Controllers
 
         [Post("/Person")]
         Task Post(Person person);
+
+        [Get("/Person/{email}")]
+        Task<PersonLoginDto?> GetByEmail(string email);
     }
 }

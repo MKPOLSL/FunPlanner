@@ -1,9 +1,8 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using FunPlanner.Models;
-using FunPlannerShared.Data.Entities;
+using FunPlannerShared.Data.Dtos;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
@@ -17,7 +16,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         var identity = new ClaimsIdentity();
         UserStorageDto userDto = await localStorageService.GetItemAsync<UserStorageDto>("user").AsTask();
-        if(userDto != null)
+        if (userDto != null)
         {
             identity = new ClaimsIdentity(new[]
             {
@@ -29,13 +28,13 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return new AuthenticationState(user);
     }
 
-    public void MarkUserAsAuthenticated(Person person)
+    public void MarkUserAsAuthenticated(PersonLoginDto person)
     {
         var identity = new ClaimsIdentity(new[]
         {
-                new Claim(ClaimTypes.Name, $"{person.FirstName} {person.LastName}"),
+            new Claim(ClaimTypes.Name, $"{person.FirstName} {person.LastName}"),
                 //new Claim(ClaimTypes.Role, employee.Role.ToString())
-            }, "apiauth_type");
+        }, "apiauth_type");
 
         var user = new ClaimsPrincipal(identity);
 

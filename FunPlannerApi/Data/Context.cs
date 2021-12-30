@@ -10,6 +10,7 @@ namespace FunPlannerApi.Data
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<EventParticipants> EventParticipants { get; set; }
+        public DbSet<Password> Passwords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,13 @@ namespace FunPlannerApi.Data
                 .HasOne<CalendarEvent>(sc => sc.CalendarEvent)
                 .WithMany(s => s.Participants)
                 .HasForeignKey(sc => sc.EventId).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Password>()
+                .HasKey(p => p.PersonId);
+
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Password)
+                .WithOne(p => p.Person);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿@page "/upcomming-events"
+﻿@page "/upcoming-events"
 @using System.Net.Http.Json
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
 @inject IEventController eventController
 @inject HttpClient httpClient
 
-<h3>Upcomming Events</h3>
+<h3>Upcoming Events</h3>
 
 <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
