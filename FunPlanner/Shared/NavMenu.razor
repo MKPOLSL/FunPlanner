@@ -7,6 +7,8 @@
     </div>
 </div>
 
+<AuthorizeView>
+<Authorized>
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
@@ -31,6 +33,8 @@
         </div>
     </nav>
 </div>
+</Authorized>
+</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;

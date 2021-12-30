@@ -10,7 +10,8 @@
 @inject IPersonController person
 @inject IDialogService DialogService
 
-
+<AuthorizeView>
+<Authorized>
 <PageTitle>Index</PageTitle>
 
  <div class="row">
@@ -63,6 +64,11 @@
     Dodaj osobę
 </MudButton>
 
+</Authorized>
+    <NotAuthorized>
+        <div>Proszę się zalogować</div>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {

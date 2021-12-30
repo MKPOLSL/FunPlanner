@@ -22,15 +22,13 @@
     </RowTemplate>
 </MudTable>
 
-<MudSwitch @bind-Checked="loading">Show Loading</MudSwitch>
-
 @code {
     private bool loading = true;
     private ICollection<CalendarEvent> Elements = new List<CalendarEvent>();
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await eventController.Get();
+        Elements = await eventController.GetUpcoming();
         loading = false;
     }
 }
