@@ -18,9 +18,10 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpGet(Name = "GetPersons")]
-        public async Task<IEnumerable<Person>> Get()
+        public async Task<ICollection<Person>> Get()
         {
-            return await Context.Set<Person>().ToListAsync();
+            var persons = await Context.Set<Person>().ToListAsync();
+            return persons;
         }
 
         [HttpPost(Name = "PostPerson")]

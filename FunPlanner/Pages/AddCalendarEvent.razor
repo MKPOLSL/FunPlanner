@@ -3,7 +3,6 @@
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
 @inject IEventController eventController
-@inject ILocalStorageService storage
 
 <PageTitle>Dodaj Wydarzenie</PageTitle>
 
@@ -29,8 +28,8 @@
 @code {
     private int currentCount = 0;
     private int eventCount = 0;
-    private Event calendarEvent = new();
-    private ICollection<Event> events = new List<Event>();
+    private CalendarEventDto calendarEvent = new();
+    //private ICollection<Event> events = new List<Event>();
 
     private async Task IncrementCount()
     {
@@ -40,15 +39,15 @@
 
     private async Task AddEvent()
     {
-        var newEvent = new Event
-        {
-            Start = calendarEvent.Start,
-            End = calendarEvent.End,
-            Name = calendarEvent.Name,
-            Description = calendarEvent.Description
-        };
+        //var newEvent = new Event
+        //{
+        //    Start = calendarEvent.Start,
+        //    End = calendarEvent.End,
+        //    Name = calendarEvent.Name,
+        //    Description = calendarEvent.Description
+        //};
 
-        var newCalendarEvent = new CalendarEvent
+        var newCalendarEvent = new CalendarEventDto
             {
                 Id = Guid.NewGuid(),
                 Start = calendarEvent.Start,
@@ -57,8 +56,8 @@
                 Description = calendarEvent.Description
             };
 
-        events.Add(calendarEvent);
+        //events.Add(calendarEvent);
         await eventController.Post(newCalendarEvent);
-        eventCount = events.Count();
+        //eventCount = events.Count();
     }
 }

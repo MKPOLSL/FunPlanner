@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunPlanner", "FunPlanner\Fu
 		{CDE671BC-95F1-4D5D-9512-7CE19892E405} = {CDE671BC-95F1-4D5D-9512-7CE19892E405}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunPlannerApi", "FunPlannerApi\FunPlannerApi.csproj", "{5FB87E4A-4817-4624-84D3-CA3D7476807B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunPlannerApi", "FunPlannerApi\FunPlannerApi.csproj", "{5FB87E4A-4817-4624-84D3-CA3D7476807B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CDE671BC-95F1-4D5D-9512-7CE19892E405} = {CDE671BC-95F1-4D5D-9512-7CE19892E405}
 	EndProjectSection
@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunPlannerShared", "FunPlannerShared\FunPlannerShared.csproj", "{CDE671BC-95F1-4D5D-9512-7CE19892E405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunPlannerShared", "FunPlannerShared\FunPlannerShared.csproj", "{CDE671BC-95F1-4D5D-9512-7CE19892E405}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,11 +1,13 @@
-﻿@using FunPlannerShared.Controllers
+﻿@using Blazored.LocalStorage
+@using FunPlanner.Models
+@using FunPlannerShared.Controllers
 @using MudBlazor
 @using FunPlannerShared.Data.Entities
 @inject ISnackbar Snackbar
 @inject IEventController eventController
-@inject CustomAuthStateProvider authStateProvider
 @inject ILocalStorageService storage
-
+@inject IPersonController personController
+@inject AuthenticationStateProvider authStateProvider
 
 <MudDialog>
     <TitleContent>
@@ -34,7 +36,7 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public CalendarEvent newEvent { get; set; } = new CalendarEvent();
+    [Parameter] public CalendarEventDto newEvent { get; set; } = new();
 
     private TimeSpan? StartSpan { get; set; } = new TimeSpan(10, 15, 30);
     private TimeSpan? EndSpan { get; set; } = new TimeSpan(10, 15, 30);
@@ -62,8 +64,10 @@
         {
             newEvent.Start = (DateTime)(StartDate + StartSpan);
             newEvent.End = (DateTime)(EndDate + EndSpan);
-            var state = await authStateProvider.GetAuthenticationStateAsync();
-            //storage.
+            var state = await (authStateProvider as CustomAuthStateProvider).GetAuthenticationStateAsync();
+            UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
+            var user = await personController.GetByName(userDto.FirstName, userDto.LastName);
+            newEvent.CreatorId = user.Id;
             await eventController.Post(newEvent);
             Snackbar.Add("Dodano Wydarzenie", Severity.Success);
             MudDialog.Close(DialogResult.Ok(newEvent.Name));

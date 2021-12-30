@@ -1,3 +1,4 @@
+using FunPlannerApi.Automapper;
 using FunPlannerApi.Controllers;
 using FunPlannerApi.Data;
 using FunPlannerShared.Controllers;
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(EventProfile));
 
 builder.Services.AddDbContext<Context>(options =>
        options.UseSqlServer("Data Source=VUZIX-KOMPUTR\\MSSQL_FUNPLANNER;Initial Catalog=funplanner;Integrated Security=True"));

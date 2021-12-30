@@ -1,4 +1,5 @@
-﻿using FunPlannerApi.Data;
+﻿using AutoMapper;
+using FunPlannerApi.Data;
 using FunPlannerShared.Controllers;
 using FunPlannerShared.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -16,16 +17,19 @@ namespace FunPlannerApi.Controllers
     public class EventController : ControllerBase, IEventController
     {
         private DbContext Context { get; set; }
+        private IMapper mapper { get; set; }
 
-        public EventController(Context context)
+        public EventController(Context context, IMapper mapper)
         {
             Context = context;
+            this.mapper = mapper;
         }
 
         [HttpPost(Name = "PostEvent")]
-        public async Task Post([FromBody] CalendarEvent calendarEvent)
+        public async Task Post([FromBody] CalendarEventDto calendarEvent)
         {
-            Context.Add(calendarEvent);
+            var newEvent = mapper.Map<CalendarEvent>(calendarEvent);
+            Context.Add(newEvent);
             await Context.SaveChangesAsync();
         }
 

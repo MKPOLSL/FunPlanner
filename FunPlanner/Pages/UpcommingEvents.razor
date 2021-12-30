@@ -1,22 +1,22 @@
-﻿@page "/hall-of-fame"
+﻿@page "/upcomming-events"
 @using System.Net.Http.Json
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
-@inject IPersonController personController
+@inject IEventController eventController
 @inject HttpClient httpClient
 
 <h3>Upcomming Events</h3>
 
 <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
-        <MudTh>Użytkownik</MudTh>
-        <MudTh>Punkty</MudTh>
-        <MudTh>Liczba utworzonych wydarzeń</MudTh>
+        <MudTh>Nazwa wydarzenia</MudTh>
+        <MudTh>Start</MudTh>
+        <MudTh>Koniec</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">@context.FirstName @context.LastName</MudTd>
-        <MudTd DataLabel="Points">@context.Points</MudTd>
-        <MudTd DataLabel="EventsCounter">@context.CreatedEvents?.Count()</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Start">@context.Start</MudTd>
+        <MudTd DataLabel="End">@context.End</MudTd>
         @*<MudTd DataLabel="Position" HideSmall="_hidePosition">@context.Position</MudTd>
         <MudTd DataLabel="Molar mass">@context.Molar</MudTd>*@
     </RowTemplate>
@@ -26,11 +26,11 @@
 
 @code {
     private bool loading = true;
-    private ICollection<Person> Elements = new List<Person>();
+    private ICollection<CalendarEvent> Elements = new List<CalendarEvent>();
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await personController.Get();
+        Elements = await eventController.Get();
         loading = false;
     }
 }

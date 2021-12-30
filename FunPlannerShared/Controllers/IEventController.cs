@@ -6,9 +6,9 @@ namespace FunPlannerShared.Controllers
     public interface IEventController
     {
         [Post("/Event")]
-        Task Post(CalendarEvent calendarEvent);
+        Task Post(CalendarEventDto calendarEvent);
 
-        [Post("/Event")]
+        [Get("/Event")]
         Task<ICollection<CalendarEvent>> Get();
     }
 }
