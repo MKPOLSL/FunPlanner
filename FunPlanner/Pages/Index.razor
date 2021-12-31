@@ -60,10 +60,6 @@
     Dodaj wydarzenie
 </MudButton>
 
-<MudButton OnClick="AddPerson" Variant="Variant.Filled" Color="Color.Primary">
-    Dodaj osobę
-</MudButton>
-
 </Authorized>
     <NotAuthorized>
         <div>Proszę się zalogować</div>
@@ -86,18 +82,5 @@
     private void OpenDialog()
     {
         DialogService.Show<AddEventDialog>("Dodaj wydarzenie", new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
-    }
-
-    private async Task AddPerson()
-    {
-        var p = new Person
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "Mateusz",
-                LastName = "Kulinowski",
-                Email = "matkul@email.email",
-                Points = 0
-            };
-        await person.Post(p);
     }
  }
