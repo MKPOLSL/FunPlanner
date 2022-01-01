@@ -7,7 +7,12 @@ namespace FunPlannerApi.Automapper
     {
         public Profiles()
         {
-            CreateMap<CalendarEventDto, CalendarEvent>();
+            CreateMap<CalendarEventCreateDto, CalendarEvent>();
+
+            CreateMap<CalendarEvent, UpcomingEventDto>()
+                .ForMember(dest => dest.Participants, opt => opt.MapFrom(e => e.Participants.Count()))
+                .ForMember(dest => dest.ParticipantsId, opt => opt.MapFrom(e => e.Participants.Select(p => p.PersonId)));
+            CreateMap<ICollection<UpcomingEventDto>, ICollection<CalendarEvent>>();
         }
     }
 }

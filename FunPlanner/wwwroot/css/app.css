@@ -63,7 +63,10 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
-.spinner {
+
+
+
+/*.spinner {
     border: 16px solid silver;
     border-top: 16px solid #337AB7;
     border-radius: 50%;
@@ -73,7 +76,7 @@ a, .btn-link {
     top: 40%;
     left: 55%;
     position: absolute;
-}
+}*/
 
 @keyframes spin {
     0% {
@@ -84,3 +87,5 @@ a, .btn-link {
         transform: rotate(360deg)
     }
 }
+
+

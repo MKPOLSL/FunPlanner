@@ -1,34 +1,156 @@
 ﻿@page "/upcoming-events"
 @using System.Net.Http.Json
+@using FunPlanner.Models
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
 @inject IEventController eventController
+@inject IPersonController personController
 @inject HttpClient httpClient
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject ISnackbar Snackbar
 
-<h3>Upcoming Events</h3>
+<h3>Nadchodzące wydarzenia</h3>
 
-<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
+<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
+        <MudTh></MudTh>
         <MudTh>Nazwa wydarzenia</MudTh>
         <MudTh>Start</MudTh>
         <MudTh>Koniec</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => ShowButtonPress(context.Id))">@((context.ShowDetails == true)? "Ukryj" : "Pokaż") Detale wydarzenia</MudButton></MudTd>
+        <MudTd DataLabel="Name"><strong>@context.Name</strong></MudTd>
         <MudTd DataLabel="Start">@context.Start</MudTd>
         <MudTd DataLabel="End">@context.End</MudTd>
         @*<MudTd DataLabel="Position" HideSmall="_hidePosition">@context.Position</MudTd>
         <MudTd DataLabel="Molar mass">@context.Molar</MudTd>*@
     </RowTemplate>
+
+    <ChildRowContent>
+		@if (context.ShowDetails)
+				{
+  <MudTr>
+   <td colspan="4">
+	<MudCard Elevation="0">
+	 <MudCardHeader>
+	  <CardHeaderContent>
+	   <MudText Typo="Typo.body1">Detale wydarzenia <strong>@context.Name</strong></MudText>
+	  </CardHeaderContent>
+	 </MudCardHeader>
+
+	<div class="container">
+		<div class="column">
+			<div>
+			<strong>Opis:</strong> @context.Description
+			</div>
+			<div>
+			<strong>Limit uczestników:</strong> @context.Limit
+			</div><div>
+			<strong>Miejsce:</strong> @context.Place
+			</div>
+			<div>
+			<strong>Wymagany zapis:</strong> @(context.EventRegistration ? "tak" : "nie")
+			</div>
+		</div>
+		<div class="column">
+			<MudButton Color="Color.Primary" Disabled="context.ParticipantsId.Contains(user.Id)" OnClick="async () => await AddPersonToEvent(context.Id)" class="button" Variant="Variant.Filled">Zapisz mnie!</MudButton>
+		</div>
+	</div>
+	
+
+	 @*<MudCardContent Class="pa-0">
+	  <MudTable Items="@context" Context="childContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+	   <ColGroup>
+		<col />
+		<col />
+		<col style="width:200px;" />
+	   </ColGroup>
+	   <HeaderContent>
+		<MudTh>Opis</MudTh>
+		<MudTh>Miejsce</MudTh>
+		<MudTh>Limit osób</MudTh>
+		<MudTh>Liczba uczestników</MudTh>
+	   </HeaderContent>
+	   <RowTemplate>
+		<MudTd DataLabel="Description">@childContext.Description</MudTd>
+		<MudTd DataLabel="Place">@childContext.Place</MudTd>
+		<MudTd DataLabel="IsLimited">@childContext.IsLimited</MudTd>
+		<MudTd DataLabel="Attendees">@childContext.Attendees</MudTd>
+	   </RowTemplate>
+	  </MudTable>
+	 </MudCardContent>*@
+
+
+
+	</MudCard>
+   </td>
+  </MudTr>
+		}
+	</ChildRowContent>
+
+
+@*	<ChildRowContent>
+		@if (context.ShowDetails)
+				{
+  <MudTr>
+   <td colspan="4">
+	<MudCard Elevation="0">
+	 <MudCardHeader>
+	  <CardHeaderContent>
+	   <MudText Typo="Typo.body1">Detale wydarzenia <strong>@context.Name</strong></MudText>
+	  </CardHeaderContent>
+	 </MudCardHeader>
+	 <MudCardContent Class="pa-0">
+	  <MudTable Items="@context" Context="childContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+	   <ColGroup>
+		<col />
+		<col />
+		<col style="width:200px;" />
+	   </ColGroup>
+	   <HeaderContent>
+		<MudTh>Opis</MudTh>
+		<MudTh>Miejsce</MudTh>
+		<MudTh>Limit osób</MudTh>
+		<MudTh>Liczba uczestników</MudTh>
+	   </HeaderContent>
+	   <RowTemplate>
+		<MudTd DataLabel="Description">@childContext.Description</MudTd>
+		<MudTd DataLabel="Place">@childContext.Place</MudTd>
+		<MudTd DataLabel="IsLimited">@childContext.IsLimited</MudTd>
+		<MudTd DataLabel="Attendees">@childContext.Attendees</MudTd>
+	   </RowTemplate>
+	  </MudTable>
+	 </MudCardContent>
+	</MudCard>
+   </td>
+  </MudTr>
+		}
+	</ChildRowContent>*@
+
 </MudTable>
 
 @code {
-    private bool loading = true;
-    private ICollection<CalendarEvent> Elements = new List<CalendarEvent>();
+	private bool loading = true;
+	private ICollection<UpcomingEventDto> Elements = new List<UpcomingEventDto>();
+	private UserStorageDto user;
 
-    protected override async Task OnInitializedAsync()
-    {
-        Elements = await eventController.GetUpcoming();
-        loading = false;
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		Elements = await eventController.GetUpcoming();
+		user = await localStorageService.GetItemAsync<UserStorageDto>("user");
+		loading = false;
+	}
+
+	private void ShowButtonPress(Guid nr)
+	{
+		UpcomingEventDto show = Elements.First(f => f.Id == nr);
+		show.ShowDetails = !show.ShowDetails;
+	}
+
+	private async Task AddPersonToEvent(Guid eventId)
+	{
+		await eventController.AssignPersonToEvent(eventId, user.Id);
+		Snackbar.Add("Zapisano na wydarzenie!", Severity.Success);
+	}
 }

@@ -36,7 +36,7 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public CalendarEventDto newEvent { get; set; } = new();
+    [Parameter] public CalendarEventCreateDto newEvent { get; set; } = new();
 
     private TimeSpan? StartSpan { get; set; } = new TimeSpan(10, 15, 30);
     private TimeSpan? EndSpan { get; set; } = new TimeSpan(10, 15, 30);

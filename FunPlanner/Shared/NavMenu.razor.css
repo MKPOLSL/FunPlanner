@@ -7,8 +7,14 @@
     background-color: rgba(0,0,0,0.4);
 }
 
+.container-fluid {
+    align-content: end;
+}
+
 .navbar-brand {
-    font-size: 1.1rem;
+    font-size: 2.2rem;
+    text-align: center;
+    color: #F3E5F5;
 }
 
 .oi {
@@ -34,10 +40,11 @@
     .nav-item ::deep a {
         color: #d7d7d7;
         border-radius: 4px;
-        height: 3rem;
+        height: 7rem;
         display: flex;
         align-items: center;
         line-height: 3rem;
+        padding: 0.2rem;
     }
 
 .nav-item ::deep a.active {

@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider/>
+<MudThemeProvider Theme="MyCustomTheme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
@@ -20,3 +20,15 @@
         </article>
     </main>
 </div>
+
+@code{
+    MudTheme MyCustomTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = "#B3AF1B",
+            Secondary = Colors.Green.Accent4,
+            AppbarBackground = Colors.Red.Default,
+        }
+    };
+}

@@ -26,6 +26,7 @@ public class UserAuthorizationService
         {
             await localStorageService.SetItemAsync("user", new PersonLoginDto()
             {
+                Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email

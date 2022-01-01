@@ -51,6 +51,7 @@ namespace FunPlannerApi.Controllers
 
             return new PersonLoginDto
             {
+                Id = person.Id,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Email = person.Email,

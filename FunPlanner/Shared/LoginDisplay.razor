@@ -8,7 +8,9 @@
 
 <AuthorizeView>
     <Authorized>
-        Witaj @context.User.Identity?.Name!
+        <div class="hello-message">
+            Witaj @context.User.Identity?.Name!
+        </div>
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>

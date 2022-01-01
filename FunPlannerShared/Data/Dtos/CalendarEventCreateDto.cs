@@ -1,6 +1,6 @@
 ﻿namespace FunPlannerShared.Data.Entities
 {
-    public class CalendarEventDto : IdentityEntity
+    public class CalendarEventCreateDto : IdentityEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -12,7 +12,7 @@
         public int? Limit { get; set; } = 10;
         public string Place { get; set; }
 
-        public CalendarEventDto()
+        public CalendarEventCreateDto()
         {
             Id = Guid.NewGuid();
             Name = "Nazwa";

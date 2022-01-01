@@ -26,7 +26,7 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpPost(Name = "PostEvent")]
-        public async Task Post([FromBody] CalendarEventDto calendarEvent)
+        public async Task Post([FromBody] CalendarEventCreateDto calendarEvent)
         {
             var newEvent = Mapper.Map<CalendarEvent>(calendarEvent);
             Context.Add(newEvent);
@@ -40,12 +40,44 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpGet("/Upcoming", Name = "Upcoming")]
-        public async Task<ICollection<CalendarEvent>> GetUpcoming()
+        public async Task<ICollection<UpcomingEventDto>> GetUpcoming()
         {
-            var events =  await Context.Set<CalendarEvent>().Where(e => e.Start > DateTime.Now).OrderBy(e => e.Start).ToListAsync();
-            if(events.Any())
-                return events;
-            return new List<CalendarEvent>();
+            ICollection<CalendarEvent> events =  
+                await Context.Set<CalendarEvent>()
+                .Where(e => e.Start > DateTime.Now)
+                .OrderBy(e => e.Start)
+                .Include(e => e.Participants)
+                .ToListAsync();
+            if (events.Any())
+            {
+                var upcomingEvents = new List<UpcomingEventDto>();
+                upcomingEvents = Mapper.Map<List<UpcomingEventDto>>(events);
+                return upcomingEvents;
+            }
+            return new List<UpcomingEventDto>();
+        }
+
+        [HttpPost("/Sign-me", Name = "SignToEvent")]
+        public async Task AssignPersonToEvent(Guid eventId, Guid personId)
+        {
+            var eventToAssign =
+                await Context.Set<CalendarEvent>()
+                .Where(e => e.Id == eventId)
+                .Include(e => e.Participants)
+                .OrderBy(e => e.Start).FirstOrDefaultAsync();
+            if (eventToAssign == null)
+                throw new HttpRequestException("Event not found.");
+
+            if(eventToAssign.Participants.Select(p => p.PersonId).Contains(personId))
+                    throw new HttpRequestException("Already assigned to event!");
+
+            var eventParticipants = new EventParticipants
+            {
+                PersonId = personId,
+                EventId = eventId
+            };
+            Context.AddAsync(eventParticipants);
+            await Context.SaveChangesAsync();
         }
     }
 }
