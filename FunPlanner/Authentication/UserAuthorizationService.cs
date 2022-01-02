@@ -2,7 +2,6 @@
 using FunPlanner.Models;
 using FunPlannerShared.Controllers;
 using FunPlannerShared.Data.Dtos;
-using FunPlannerShared.Data.Entities;
 
 public class UserAuthorizationService
 {
@@ -17,10 +16,12 @@ public class UserAuthorizationService
 
     public async Task<PersonLoginDto?> LoginUser(UserLoginDto employee)
     {
-        var user = await personController.GetByEmail(employee.Email);
+        var validationResult = await personController.ValidateUser(employee.Email, employee.Password);
 
-        if(user?.Password != employee.Password)
+        if (validationResult.IsValidated == false)
             return null;
+
+        var user = await personController.GetByEmail(employee.Email);
 
         if (user != null)
         {
@@ -38,15 +39,10 @@ public class UserAuthorizationService
 
     public async Task LogoutUser()
     {
-        //var user = await personController.GetByName(employee.FirstName, employee.LastName);
-
-        //if (user != null)
-        //{
-            var userFromStorage = await localStorageService.GetItemAsync<UserStorageDto>("user");
-            if(userFromStorage != null)
-            {
-                await localStorageService.RemoveItemAsync("user");
-            }
-        //}
+        var userFromStorage = await localStorageService.GetItemAsync<UserStorageDto>("user");
+        if (userFromStorage != null)
+        {
+            await localStorageService.RemoveItemAsync("user");
+        }
     }
 }

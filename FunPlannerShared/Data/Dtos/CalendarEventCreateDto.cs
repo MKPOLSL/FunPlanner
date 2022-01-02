@@ -9,7 +9,7 @@
         public Guid CreatorId { get; set; }
         public bool EventRegistration { get; set; } = false;
         public bool IsLimited { get; set; } = false;
-        public int? Limit { get; set; } = 10;
+        public int? Limit { get; set; } = null;
         public string Place { get; set; }
 
         public CalendarEventCreateDto()

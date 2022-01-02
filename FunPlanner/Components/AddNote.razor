@@ -1,0 +1,56 @@
+﻿@using Blazored.LocalStorage
+@using FunPlanner.Models
+@using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Dtos
+@using MudBlazor
+@using FunPlannerShared.Data.Entities
+@inject ISnackbar Snackbar
+@inject IEventController eventController
+@inject ILocalStorageService storage
+@inject IPersonController personController
+@inject AuthenticationStateProvider authStateProvider
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.BookmarkAdd" Class="mr-3 mb-n1"/>
+            Dodaj notatkę
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="note.Content" Label="Opis" Variant="Variant.Text" Lines="4"></MudTextField>
+        <MudCheckBox @bind-Checked="@AddPoint">Dodać punkt?</MudCheckBox>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Anuluj</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddNoteToUser">Dodaj</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [ParameterAttribute] public Guid PersonId { get; set; }
+
+    [Parameter] public NoteDto note { get; set; } = new();
+    bool AddPoint { get; set; } = false;
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private async Task AddNoteToUser()
+    {
+        note.PersonId = PersonId;
+        if(note.Content == null)
+        {
+            Snackbar.Add("Pusta notatka!", Severity.Error);
+            return;
+        }
+
+        await personController.AddNote(PersonId, note.Content);
+        await personController.AddPoint(PersonId);
+        Snackbar.Add("Dodano notatkę!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(note.Content));
+    }
+}

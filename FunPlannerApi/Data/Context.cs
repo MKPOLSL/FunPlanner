@@ -11,6 +11,7 @@ namespace FunPlannerApi.Data
         public DbSet<Person> Persons { get; set; }
         public DbSet<EventParticipants> EventParticipants { get; set; }
         public DbSet<Password> Passwords { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,11 @@ namespace FunPlannerApi.Data
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.Password)
                 .WithOne(p => p.Person);
+
+            modelBuilder.Entity<Note>()
+                .HasOne(p => p.Person)
+                .WithMany(p => p.Notes)
+                .HasForeignKey(n => n.PersonId);
         }
     }
 }

@@ -45,8 +45,15 @@
 			<strong>Opis:</strong> @context.Description
 			</div>
 			<div>
-			<strong>Limit uczestników:</strong> @context.Limit
-			</div><div>
+			<strong>Limit uczestników:</strong> @(context.Limit != null ? @context.Limit : "brak limitu")
+									@if (context.Limit != null)
+									{
+										<div>
+										<strong>aktualnie zapisanych:</strong> @context.Participants
+										</div>
+									}
+			</div>
+			<div>
 			<strong>Miejsce:</strong> @context.Place
 			</div>
 			<div>
@@ -57,77 +64,12 @@
 			<MudButton Color="Color.Primary" Disabled="context.ParticipantsId.Contains(user.Id)" OnClick="async () => await AddPersonToEvent(context.Id)" class="button" Variant="Variant.Filled">Zapisz mnie!</MudButton>
 		</div>
 	</div>
-	
-
-	 @*<MudCardContent Class="pa-0">
-	  <MudTable Items="@context" Context="childContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
-	   <ColGroup>
-		<col />
-		<col />
-		<col style="width:200px;" />
-	   </ColGroup>
-	   <HeaderContent>
-		<MudTh>Opis</MudTh>
-		<MudTh>Miejsce</MudTh>
-		<MudTh>Limit osób</MudTh>
-		<MudTh>Liczba uczestników</MudTh>
-	   </HeaderContent>
-	   <RowTemplate>
-		<MudTd DataLabel="Description">@childContext.Description</MudTd>
-		<MudTd DataLabel="Place">@childContext.Place</MudTd>
-		<MudTd DataLabel="IsLimited">@childContext.IsLimited</MudTd>
-		<MudTd DataLabel="Attendees">@childContext.Attendees</MudTd>
-	   </RowTemplate>
-	  </MudTable>
-	 </MudCardContent>*@
-
-
 
 	</MudCard>
    </td>
   </MudTr>
 		}
 	</ChildRowContent>
-
-
-@*	<ChildRowContent>
-		@if (context.ShowDetails)
-				{
-  <MudTr>
-   <td colspan="4">
-	<MudCard Elevation="0">
-	 <MudCardHeader>
-	  <CardHeaderContent>
-	   <MudText Typo="Typo.body1">Detale wydarzenia <strong>@context.Name</strong></MudText>
-	  </CardHeaderContent>
-	 </MudCardHeader>
-	 <MudCardContent Class="pa-0">
-	  <MudTable Items="@context" Context="childContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
-	   <ColGroup>
-		<col />
-		<col />
-		<col style="width:200px;" />
-	   </ColGroup>
-	   <HeaderContent>
-		<MudTh>Opis</MudTh>
-		<MudTh>Miejsce</MudTh>
-		<MudTh>Limit osób</MudTh>
-		<MudTh>Liczba uczestników</MudTh>
-	   </HeaderContent>
-	   <RowTemplate>
-		<MudTd DataLabel="Description">@childContext.Description</MudTd>
-		<MudTd DataLabel="Place">@childContext.Place</MudTd>
-		<MudTd DataLabel="IsLimited">@childContext.IsLimited</MudTd>
-		<MudTd DataLabel="Attendees">@childContext.Attendees</MudTd>
-	   </RowTemplate>
-	  </MudTable>
-	 </MudCardContent>
-	</MudCard>
-   </td>
-  </MudTr>
-		}
-	</ChildRowContent>*@
-
 </MudTable>
 
 @code {

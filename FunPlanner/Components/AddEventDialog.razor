@@ -58,18 +58,22 @@
     {
         if (StartDate == null || StartSpan == null || EndDate == null || EndSpan == null)
         {
-            //tu throw bo niepełne dane
+            Snackbar.Add("Niepoprawne daty!", Severity.Error);
         }
         else
         {
             newEvent.Start = (DateTime)(StartDate + StartSpan);
             newEvent.End = (DateTime)(EndDate + EndSpan);
-            var state = await (authStateProvider as CustomAuthStateProvider).GetAuthenticationStateAsync();
+            if(newEvent.Start > newEvent.End)
+            {
+                Snackbar.Add("Termin końca wcześniej niż start!", Severity.Error);
+                return;
+            }
             UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
-            var user = await personController.GetByName(userDto.FirstName, userDto.LastName);
+            var user = await personController.GetByEmail(userDto.Email);
             newEvent.CreatorId = user.Id;
             await eventController.Post(newEvent);
-            Snackbar.Add("Dodano Wydarzenie", Severity.Success);
+            Snackbar.Add("Dodano wydarzenie!", Severity.Success);
             MudDialog.Close(DialogResult.Ok(newEvent.Name));
         }
     }
