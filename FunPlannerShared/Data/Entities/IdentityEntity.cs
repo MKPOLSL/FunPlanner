@@ -1,6 +1,6 @@
 ﻿namespace FunPlannerShared.Data.Entities
 {
-    public class IdentityEntity
+    public abstract class IdentityEntity
     {
         public Guid Id { get; set; }
     }

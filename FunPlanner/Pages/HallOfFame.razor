@@ -18,7 +18,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.FirstName @context.LastName</MudTd>
         <MudTd DataLabel="Points">@context.Points</MudTd>
-        <MudButton OnClick="() => AddNote(context.Id)">Dodaj notatkę</MudButton>
+        <MudTd><MudButton OnClick="() => AddNote(context.Id)">Dodaj notatkę</MudButton></MudTd>
         @*<MudTd DataLabel="AddNote">@context.CreatedEvents?.Count()</MudTd>*@
     </RowTemplate>
 </MudTable>
@@ -37,11 +37,12 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("PersonId", personId);
-        DialogService.Show<AddNote>("Dodaj notatkę", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
-        Elements = await personController.Get();
-        await InvokeAsync(() =>
+        var dialog = DialogService.Show<AddNote>("Dodaj notatkę", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var result = await dialog.Result;
+        if (!result.Cancelled)
         {
+            Elements = await personController.Get();
             StateHasChanged();
-        });
+        }
     }
 }

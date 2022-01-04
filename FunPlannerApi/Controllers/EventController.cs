@@ -48,6 +48,7 @@ namespace FunPlannerApi.Controllers
                 .OrderBy(e => e.Start)
                 .Include(e => e.Participants)
                 .ToListAsync();
+
             if (events.Any())
             {
                 var upcomingEvents = new List<UpcomingEventDto>();

@@ -4,14 +4,13 @@
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
 @using MudBlazor
-@inject IWeatherForecastController weather
 @inject IPersonController person
 @inject IEventController eventContoller
 @inject IDialogService DialogService
 
 <PageTitle>My Events</PageTitle>
 
-<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nazwa</MudTh>
         <MudTh>Organizator</MudTh>

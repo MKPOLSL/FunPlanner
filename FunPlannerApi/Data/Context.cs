@@ -12,6 +12,7 @@ namespace FunPlannerApi.Data
         public DbSet<EventParticipants> EventParticipants { get; set; }
         public DbSet<Password> Passwords { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Award> Awards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,15 @@ namespace FunPlannerApi.Data
                 .HasOne(p => p.Person)
                 .WithMany(p => p.Notes)
                 .HasForeignKey(n => n.PersonId);
+
+            modelBuilder.Entity<Award>()
+                .HasOne(p => p.Person)
+                .WithMany(p => p.Awards)
+                .HasForeignKey(n => n.PersonId);
+
+            modelBuilder.Entity<CalendarEvent>()
+                .HasOne(p => p.Award)
+                .WithOne(p => p.CalendarEvent);
         }
     }
 }

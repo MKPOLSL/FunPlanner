@@ -30,10 +30,6 @@ builder.Services.AddOidcAuthentication(options =>
 builder.Services.AddMudServices();
 
 builder.Services
-    .AddRefitClient<IWeatherForecastController>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
-
-builder.Services
     .AddRefitClient<IPersonController>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
 

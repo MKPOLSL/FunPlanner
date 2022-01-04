@@ -10,6 +10,7 @@
         public Guid CreatorId { get; set; }
         public Person Creator { get; set; }
         public ICollection<EventParticipants>? Participants { get; set; }
+        public virtual Award? Award { get; set; }
 
         public bool EventRegistration { get; set; } = false;
         public bool IsLimited { get; set; } = false;

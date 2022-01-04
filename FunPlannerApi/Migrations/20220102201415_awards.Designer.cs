@@ -4,6 +4,7 @@ using FunPlannerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FunPlannerApi.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220102201415_awards")]
+    partial class awards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +23,6 @@ namespace FunPlannerApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("FunPlannerShared.Data.Entities.Award", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("AwardType")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("CalendarEventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CalendarEventId")
-                        .IsUnique();
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("Awards");
-                });
 
             modelBuilder.Entity("FunPlannerShared.Data.Entities.CalendarEvent", b =>
                 {
@@ -171,25 +145,6 @@ namespace FunPlannerApi.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("FunPlannerShared.Data.Entities.Award", b =>
-                {
-                    b.HasOne("FunPlannerShared.Data.Entities.CalendarEvent", "CalendarEvent")
-                        .WithOne("Award")
-                        .HasForeignKey("FunPlannerShared.Data.Entities.Award", "CalendarEventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FunPlannerShared.Data.Entities.Person", "Person")
-                        .WithMany("Awards")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CalendarEvent");
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("FunPlannerShared.Data.Entities.CalendarEvent", b =>
                 {
                     b.HasOne("FunPlannerShared.Data.Entities.Person", "Creator")
@@ -244,15 +199,11 @@ namespace FunPlannerApi.Migrations
 
             modelBuilder.Entity("FunPlannerShared.Data.Entities.CalendarEvent", b =>
                 {
-                    b.Navigation("Award");
-
                     b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("FunPlannerShared.Data.Entities.Person", b =>
                 {
-                    b.Navigation("Awards");
-
                     b.Navigation("CreatedEvents");
 
                     b.Navigation("Notes");
