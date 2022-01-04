@@ -19,9 +19,9 @@ namespace FunPlannerApi.Data
             modelBuilder.Entity<EventParticipants>().HasKey(sc => new { sc.PersonId, sc.EventId });
 
             modelBuilder.Entity<CalendarEvent>()
-            .HasOne<Person>(s => s.Creator)
-            .WithMany(g => g.CreatedEvents)
-            .HasForeignKey(s => s.CreatorId).OnDelete(DeleteBehavior.NoAction);
+                .HasOne<Person>(s => s.Creator)
+                .WithMany(g => g.CreatedEvents)
+                .HasForeignKey(s => s.CreatorId).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<EventParticipants>()
                 .HasOne<Person>(sc => sc.Person)

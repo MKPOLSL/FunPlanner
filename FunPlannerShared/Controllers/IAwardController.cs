@@ -1,6 +1,4 @@
-﻿using FunPlannerShared.Data.Dtos;
-using FunPlannerShared.Data.Entities;
-using FunPlannerShared.Data.Enums;
+﻿using FunPlannerShared.Data.Enums;
 using Refit;
 
 namespace FunPlannerShared.Controllers

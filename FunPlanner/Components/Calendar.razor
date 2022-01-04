@@ -141,27 +141,5 @@
             rowsCount = Convert.ToInt32(days.Count / 7) + 1;
 
         Console.WriteLine($"Total Rows: {rowsCount} | Number of Empty Days {numberOfEmptyDays} | Month Days {numberOfDaysInMonth}");
-
     }
-
-    //async Task SyncEventsFromExternalProviderToCalendar()
-    //{
-    //    // fetch the events for the month 
-    //    var events = await eventsProvider.GetEventsInMonthAsync(year, month);
-
-    //    if(events == null || events.Count() == 0)
-    //        return; 
-
-    //    foreach (var day in days)
-    //    {
-    //        if (day.IsEmpty)
-    //            continue;
-
-    //        var eventsInDay = events.Where(e => e.StartDate.Date <= day.Date && e.EndDate.Date >= day.Date);
-    //        if (eventsInDay.Any())
-    //        {
-    //            day.Events.Add(eventsInDay);
-    //        }
-    //    }
-    //}
 }
