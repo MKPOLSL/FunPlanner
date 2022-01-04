@@ -29,13 +29,22 @@ builder.Services.AddOidcAuthentication(options =>
 
 builder.Services.AddMudServices();
 
+var refitUrl = new Uri("https://localhost:7063");
+
 builder.Services
     .AddRefitClient<IPersonController>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
+    .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
 
 builder.Services
     .AddRefitClient<IEventController>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7063"));
+    .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
 
+builder.Services
+    .AddRefitClient<INoteController>()
+    .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
+
+builder.Services
+    .AddRefitClient<IAwardController>()
+    .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
 
 await builder.Build().RunAsync();

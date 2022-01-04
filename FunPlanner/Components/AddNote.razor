@@ -8,6 +8,7 @@
 @inject IEventController eventController
 @inject ILocalStorageService storage
 @inject IPersonController personController
+@inject INoteController noteController
 @inject AuthenticationStateProvider authStateProvider
 
 <MudDialog>
@@ -48,8 +49,9 @@
             return;
         }
 
-        await personController.AddNote(PersonId, note.Content);
-        await personController.AddPoint(PersonId);
+        await noteController.AddNote(PersonId, note.Content);
+        if(AddPoint)
+            await personController.AddPoint(PersonId);
         Snackbar.Add("Dodano notatkę!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(note.Content));
     }

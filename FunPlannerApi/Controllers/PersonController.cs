@@ -1,4 +1,5 @@
-﻿using FunPlannerApi.Data;
+﻿using AutoMapper;
+using FunPlannerApi.Data;
 using FunPlannerShared.Controllers;
 using FunPlannerShared.Data.Dtos;
 using FunPlannerShared.Data.Entities;
@@ -12,17 +13,19 @@ namespace FunPlannerApi.Controllers
     public class PersonController : ControllerBase, IPersonController
     {
         private DbContext Context { get; set; }
+        private IMapper Mapper { get; set; }
 
-        public PersonController(Context context)
+        public PersonController(Context context, IMapper mapper)
         {
             Context = context;
+            Mapper = mapper;
         }
 
         [HttpGet(Name = "GetPersons")]
-        public async Task<ICollection<Person>> Get()
+        public async Task<ICollection<PersonDto>> Get()
         {
             var persons = await Context.Set<Person>().ToListAsync();
-            return persons;
+            return Mapper.Map<List<PersonDto>>(persons);
         }
 
         [HttpPost(Name = "PostPerson")]
@@ -38,7 +41,7 @@ namespace FunPlannerApi.Controllers
             return await Context.Set<Person>().Where(p => firstName == firstName && lastName == lastName).FirstOrDefaultAsync();
         }
 
-        [HttpGet("/Person/Get-by-email/{email}", Name = "GetPersonByEmail")]
+        [HttpGet("/person/Get-by-email/{email}", Name = "GetPersonByEmail")]
         public async Task<PersonLoginDto?> GetByEmail(string email)
         {
             var person = await Context.Set<Person>()
@@ -57,7 +60,7 @@ namespace FunPlannerApi.Controllers
             };
         }
 
-        [HttpGet("/Person/validate", Name = "ValidateUser")]
+        [HttpGet("/person/validate", Name = "ValidateUser")]
         public async Task<ValidationResult> ValidateUser([FromQuery] string email, [FromQuery] string password)
         {
             var person = await Context.Set<Person>()
@@ -72,7 +75,7 @@ namespace FunPlannerApi.Controllers
             return result;
         }
 
-        [HttpPost("/Person/note")]
+        [HttpPost("/person/note")]
         public async Task AddNote(Guid personId, string note)
         {
             var newNote = new Note
@@ -84,7 +87,7 @@ namespace FunPlannerApi.Controllers
             await Context.SaveChangesAsync();
         }
 
-        [HttpPost("/Person/point")]
+        [HttpPost("/person/point")]
         public async Task AddPoint(Guid personId)
         {
             var person = await Context.Set<Person>().Where(p => p.Id == personId).FirstOrDefaultAsync();

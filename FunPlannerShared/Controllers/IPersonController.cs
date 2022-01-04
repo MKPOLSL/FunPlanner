@@ -6,25 +6,22 @@ namespace FunPlannerShared.Controllers
 {
     public interface IPersonController
     {
-        [Get("/Person")]
-        Task<ICollection<Person>> Get();
+        [Get("/person")]
+        Task<ICollection<PersonDto>> Get();
 
-        [Get("/Person/{firstName}-{lastName}")]
+        [Get("/person/{firstName}-{lastName}")]
         Task<Person> GetByName(string firstName, string lastName);
 
-        [Post("/Person")]
+        [Post("/person")]
         Task Post(Person person);
 
-        [Get("/Person/Get-by-email/{email}")]
+        [Get("/person/Get-by-email/{email}")]
         Task<PersonLoginDto?> GetByEmail(string email);
 
-        [Get("/Person/validate")]
+        [Get("/person/validate")]
         Task<ValidationResult> ValidateUser(string email, string password);
 
-        [Post("/Person/note")]
-        Task AddNote(Guid personId, string note);
-
-        [Post("/Person/point")]
+        [Post("/person/point")]
         Task AddPoint(Guid personId);
     }
 }

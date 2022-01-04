@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FunPlannerApi.Data;
 using FunPlannerShared.Controllers;
+using FunPlannerShared.Data.Dtos;
 using FunPlannerShared.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,10 +37,10 @@ namespace FunPlannerApi.Controllers
         [HttpGet(Name = "GetEvents")]
         public async Task<ICollection<CalendarEvent>> Get()
         {
-            return await Context.Set<CalendarEvent>().ToListAsync();
+            return await Context.Set<CalendarEvent>().OrderBy(o => o.Start).ToListAsync();
         }
 
-        [HttpGet("/Upcoming", Name = "Upcoming")]
+        [HttpGet("/upcoming", Name = "Upcoming")]
         public async Task<ICollection<UpcomingEventDto>> GetUpcoming()
         {
             ICollection<CalendarEvent> events =  
@@ -58,7 +59,7 @@ namespace FunPlannerApi.Controllers
             return new List<UpcomingEventDto>();
         }
 
-        [HttpPost("/Sign-me", Name = "SignToEvent")]
+        [HttpPost("/sign-me", Name = "SignToEvent")]
         public async Task AssignPersonToEvent(Guid eventId, Guid personId)
         {
             var eventToAssign =
@@ -77,7 +78,7 @@ namespace FunPlannerApi.Controllers
                 PersonId = personId,
                 EventId = eventId
             };
-            Context.AddAsync(eventParticipants);
+            await Context.AddAsync(eventParticipants);
             await Context.SaveChangesAsync();
         }
     }

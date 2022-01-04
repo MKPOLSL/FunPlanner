@@ -1,4 +1,6 @@
-﻿namespace FunPlannerShared.Data.Entities
+﻿using FunPlannerShared.Data.Entities;
+
+namespace FunPlannerShared.Data.Dtos
 {
     public class UpcomingEventDto : IdentityEntity
     {

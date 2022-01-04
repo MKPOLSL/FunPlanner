@@ -2,6 +2,7 @@
 @using System.Net.Http.Json
 @using FunPlanner.Models
 @using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Dtos
 @using FunPlannerShared.Data.Entities
 @inject IEventController eventController
 @inject IPersonController personController
@@ -94,5 +95,7 @@
 	{
 		await eventController.AssignPersonToEvent(eventId, user.Id);
 		Snackbar.Add("Zapisano na wydarzenie!", Severity.Success);
+		Elements = await eventController.GetUpcoming();
+		StateHasChanged();
 	}
 }

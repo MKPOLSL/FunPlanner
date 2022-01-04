@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FunPlannerShared.Data.Dtos;
 using FunPlannerShared.Data.Entities;
 
 namespace FunPlannerApi.Automapper
@@ -13,6 +14,8 @@ namespace FunPlannerApi.Automapper
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(e => e.Participants.Count()))
                 .ForMember(dest => dest.ParticipantsId, opt => opt.MapFrom(e => e.Participants.Select(p => p.PersonId)));
             CreateMap<ICollection<UpcomingEventDto>, ICollection<CalendarEvent>>();
+
+            CreateMap<Person, PersonDto>();
         }
     }
 }

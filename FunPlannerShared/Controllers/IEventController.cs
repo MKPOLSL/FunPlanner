@@ -1,20 +1,21 @@
-﻿using FunPlannerShared.Data.Entities;
+﻿using FunPlannerShared.Data.Dtos;
+using FunPlannerShared.Data.Entities;
 using Refit;
 
 namespace FunPlannerShared.Controllers
 {
     public interface IEventController
     {
-        [Post("/Event")]
+        [Post("/event")]
         Task Post(CalendarEventCreateDto calendarEvent);
         
-        [Post("/Sign-me")]
+        [Post("/sign-me")]
         Task AssignPersonToEvent(Guid eventId, Guid personId);
 
-        [Get("/Event")]
+        [Get("/event")]
         Task<ICollection<CalendarEvent>> Get();
 
-        [Get("/Upcoming")]
+        [Get("/upcoming")]
         Task<ICollection<UpcomingEventDto>> GetUpcoming();
     }
 }
