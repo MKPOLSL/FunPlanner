@@ -22,11 +22,13 @@ namespace FunPlannerApi.Controllers
             Mapper = mapper;
         }
 
+        [HttpGet()]
         public Task Get()
         {
             throw new NotImplementedException();
         }
 
+        [HttpPost()]
         public Task AddAward(Guid personId, Guid eventId, AwardType awardType, string? message)
         {
             throw new NotImplementedException();

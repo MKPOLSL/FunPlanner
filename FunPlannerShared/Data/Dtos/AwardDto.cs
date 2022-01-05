@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FunPlannerShared.Data.Enums;
 
 namespace FunPlannerShared.Data.Dtos
 {
-    internal class AwardDto
+    public class AwardDto
     {
+        public Guid PersonId { get; set; }
+        public Guid CalendarEventId { get; set; }
+        public string? Text { get; set; }
+        public AwardType? AwardType { get; set; }
     }
 }

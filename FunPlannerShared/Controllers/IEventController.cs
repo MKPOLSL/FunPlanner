@@ -15,6 +15,9 @@ namespace FunPlannerShared.Controllers
         [Get("/event")]
         Task<ICollection<CalendarEvent>> Get();
 
+        [Get("/calendar")]
+        Task<ICollection<CalendarEventCalendarDto>> GetForCalendar();
+
         [Get("/upcoming")]
         Task<ICollection<UpcomingEventDto>> GetUpcoming();
     }

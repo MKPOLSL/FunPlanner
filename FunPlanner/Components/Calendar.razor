@@ -1,4 +1,7 @@
 @using FunPlanner.Models.Calendar
+@using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Dtos
+@inject IEventController eventController
 @*@inject ICalendarEventsProvider eventsProvider*@
 
 <!-- Calendar -->
@@ -6,7 +9,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-lg-2">
                         <select  name="" id="" class="fluent-input" @bind="SelectedYear">
-                            @for (int i = 2016; i < 2024; i++)
+                            @for (int i = 2020; i < 2024; i++)
                             {
                                 <option>@i</option>
                             }
@@ -59,10 +62,11 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        //await SelectYear(new ChangeEventArgs { Value = "2021"});
-        //await SelectMonth(new ChangeEventArgs { Value = "Listopad"});
         selectedYear = currentDate.Year;
         selectedMonth = currentDate.Month;
+
+        Events = await eventController.GetForCalendar();
+
         UpdateCalendar();
     }
 
@@ -96,6 +100,7 @@
     [Parameter]
     public RenderFragment<Day> DayTemplate { get; set; }
 
+    private ICollection<CalendarEventCalendarDto> Events {  get;  set; }
 
     private List<Day> days = new();
     private int rowsCount = 0;
@@ -104,12 +109,12 @@
     {
         days = new List<Day>();
 
-        // Calculate the number of empty days 
+        //calculate the number of empty days 
         var firstDayDate = new DateTime(SelectedYear, SelectedMonth, 1);
         int weekDayNumber = (int)firstDayDate.DayOfWeek;
         int numberOfEmptyDays = weekDayNumber - 1;
 
-        // Add the empty days 
+        //add empty days 
         for (int i = 0; i < numberOfEmptyDays; i++)
         {
             days.Add(new Day
@@ -119,7 +124,7 @@
             });
         }
 
-        // Add the month days 
+        //add month days 
         int numberOfDaysInMonth = DateTime.DaysInMonth(SelectedYear, SelectedMonth);
 
         for (int i = 0; i < numberOfDaysInMonth; i++)
@@ -129,17 +134,18 @@
                 DayNumber = i + 1,
                 IsEmpty = false,
                 Date = new DateTime(SelectedYear, SelectedMonth, i + 1),
-                Events = new List<Event>()
+                Events = Events.Where(e => e.Start.Date == new DateTime(SelectedYear, SelectedMonth, i + 1).Date).ToList()
             });
         }
 
-        // 2- Calcualte the number of rows 
+        //calcualte number of rows 
         int remaning = days.Count % 7;
         if (remaning == 0)
             rowsCount = days.Count / 7;
         else
             rowsCount = Convert.ToInt32(days.Count / 7) + 1;
 
+        StateHasChanged();
         Console.WriteLine($"Total Rows: {rowsCount} | Number of Empty Days {numberOfEmptyDays} | Month Days {numberOfDaysInMonth}");
     }
 }

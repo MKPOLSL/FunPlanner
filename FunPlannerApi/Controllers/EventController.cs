@@ -81,5 +81,12 @@ namespace FunPlannerApi.Controllers
             await Context.AddAsync(eventParticipants);
             await Context.SaveChangesAsync();
         }
+
+        [HttpGet("/calendar", Name = "Calendar")]
+        public async Task<ICollection<CalendarEventCalendarDto>> GetForCalendar()
+        {
+            var events = await Context.Set<CalendarEvent>().OrderBy(o => o.Start).ToListAsync();
+            return Mapper.Map<List<CalendarEventCalendarDto>>(events);
+        }
     }
 }
