@@ -62,8 +62,8 @@
         }
         else
         {
-            newEvent.Start = (DateTime)(StartDate + StartSpan);
-            newEvent.End = (DateTime)(EndDate + EndSpan);
+            newEvent.Start = (DateTime)(StartDate?.Date + StartSpan);
+            newEvent.End = (DateTime)(EndDate?.Date + EndSpan);
             if(newEvent.Start > newEvent.End)
             {
                 Snackbar.Add("Termin końca wcześniej niż start!", Severity.Error);

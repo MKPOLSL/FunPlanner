@@ -47,4 +47,8 @@ builder.Services
     .AddRefitClient<IAwardController>()
     .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
 
+builder.Services
+    .AddRefitClient<IAuthorizationController>()
+    .ConfigureHttpClient(c => c.BaseAddress = refitUrl);
+
 await builder.Build().RunAsync();

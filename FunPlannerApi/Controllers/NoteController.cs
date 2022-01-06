@@ -21,23 +21,40 @@ namespace FunPlannerApi.Controllers
             Mapper = mapper;
         }
 
+        [HttpPost("/note")]
+        public async Task AddNote(Guid FromPersonId, Guid ToPersonId, string note)
+        {
+            var newNote = new Note
+            {
+                ToPersonId = ToPersonId,
+                Content = note
+            };
+            Context.Add(newNote);
+            await Context.SaveChangesAsync();
+        }
+
         [HttpGet("/note")]
-        public async Task<ICollection<NoteDto>> Get()
+        public async Task<ICollection<NoteDto>> GetAll()
         {
             var notes = await Context.Set<Note>().ToListAsync();
             return Mapper.Map<ICollection<NoteDto>>(notes);
         }
 
-        [HttpPost("/note")]
-        public async Task AddNote(Guid personId, string note)
+        [HttpGet("/note/{id}")]
+        public Task<NoteDto> Get(Guid id)
         {
-            var newNote = new Note
-            {
-                PersonId = personId,
-                Content = note
-            };
-            Context.Add(newNote);
-            await Context.SaveChangesAsync();
+            throw new NotImplementedException();
+        }
+
+        [HttpGet("/note/get-by-person-id/{id}")]
+        public async Task<ICollection<NoteDto>> GetAllByPersonId(Guid id)
+        {
+            var notes = await Context.Set<Note>()
+                .Include(n => n.FromPerson)
+                .Include(n => n.ToPerson)
+                .Where(n => n.ToPersonId == id)
+                .ToListAsync();
+            return Mapper.Map<ICollection<NoteDto>>(notes);
         }
     }
 }

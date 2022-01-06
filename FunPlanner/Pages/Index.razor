@@ -26,7 +26,7 @@
                     {
                         <div class="day shadow-effect @currentDayClass @selectedDayClass" @onclick="() => selectedDay = day">
                             <h3 class="ms-fontSize-24 ms-fontWeight-regular">@day.DayNumber</h3>
-                            @if(day.Events != null && day.Events.Count != 0)
+                            @if(day.Events != null && day.Events.Count() != 0)
                             {
                                 var firstEvent = day.Events.FirstOrDefault();
                                 <div class="day-event">

@@ -6,6 +6,7 @@ namespace FunPlannerShared.Data.Dtos
     {
         public Guid PersonId { get; set; }
         public Guid CalendarEventId { get; set; }
+        public string CalendarEventName { get; set; }
         public string? Text { get; set; }
         public AwardType? AwardType { get; set; }
     }

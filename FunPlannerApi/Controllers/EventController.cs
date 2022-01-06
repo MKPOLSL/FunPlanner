@@ -37,10 +37,10 @@ namespace FunPlannerApi.Controllers
         [HttpGet(Name = "GetEvents")]
         public async Task<ICollection<CalendarEvent>> Get()
         {
-            return await Context.Set<CalendarEvent>().OrderBy(o => o.Start).ToListAsync();
+            return await Context.Set<CalendarEvent>().OrderByDescending(o => o.Start).ToListAsync();
         }
 
-        [HttpGet("/upcoming", Name = "Upcoming")]
+        [HttpGet("/event/upcoming", Name = "Upcoming")]
         public async Task<ICollection<UpcomingEventDto>> GetUpcoming()
         {
             ICollection<CalendarEvent> events =  
@@ -59,7 +59,7 @@ namespace FunPlannerApi.Controllers
             return new List<UpcomingEventDto>();
         }
 
-        [HttpPost("/sign-me", Name = "SignToEvent")]
+        [HttpPost("/event/sign-me", Name = "SignToEvent")]
         public async Task AssignPersonToEvent(Guid eventId, Guid personId)
         {
             var eventToAssign =
@@ -82,11 +82,28 @@ namespace FunPlannerApi.Controllers
             await Context.SaveChangesAsync();
         }
 
-        [HttpGet("/calendar", Name = "Calendar")]
+        [HttpGet("/event/calendar", Name = "Calendar")]
         public async Task<ICollection<CalendarEventCalendarDto>> GetForCalendar()
         {
             var events = await Context.Set<CalendarEvent>().OrderBy(o => o.Start).ToListAsync();
             return Mapper.Map<List<CalendarEventCalendarDto>>(events);
+        }
+
+        [HttpDelete("/event/{id}")]
+        public Task Delete(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet("/event/{id}/participants")]
+        public async Task<CalendarEventDto> GetWithParticipants(Guid id)
+        {
+            var calendarEvent = await Context.Set<CalendarEvent>()
+                .Where(e => e.Id == id)
+                .Include(e => e.Participants)
+                    .ThenInclude(e => e.Person)
+                .FirstOrDefaultAsync();
+            return Mapper.Map<CalendarEventDto>(calendarEvent);
         }
     }
 }

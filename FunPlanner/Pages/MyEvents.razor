@@ -9,21 +9,46 @@
 @inject IDialogService DialogService
 
 <PageTitle>My Events</PageTitle>
+<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h2">Moje wydarzenia</MudText> <MudDivider />
 
 <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nazwa</MudTh>
-        <MudTh>Organizator</MudTh>
         <MudTh>Opis</MudTh>
         <MudTh>Start</MudTh>
         <MudTh>Koniec</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Przyznaj nagrodę</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Nazwa">@context.Name</MudTd>
-        <MudTd DataLabel="Twórca">@(context.Creator?.FirstName + context.Creator?.LastName)</MudTd>
         <MudTd DataLabel="Opis">@context.Description</MudTd>
-        <MudTd DataLabel="Start" HideSmall="_hidePosition">@context.Start</MudTd>
-        <MudTd DataLabel="Koniec">@context.End</MudTd>
+        <MudTd DataLabel="Start" HideSmall="_hidePosition">@context.Start.ToString("f")</MudTd>
+        <MudTd DataLabel="Koniec">@context.End.ToString("f")</MudTd>
+        <MudTd DataLabel="Status">
+            @if (context.End > DateTime.Now && context.Start < DateTime.Now)
+            {
+                <MudChip Color="Color.Info">W toku</MudChip>
+            } 
+            else if (context.Start > DateTime.Now)
+            {
+                <MudChip Color="Color.Success">Nadchodzące</MudChip>
+            }
+            else
+            {
+                <MudChip Color="Color.Error">Zakończone</MudChip>
+            } 
+        </MudTd>
+        <MudTd DataLabel="Nagroda">
+        @if (context.End > DateTime.Now)
+        {
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Nie zakończono</MudButton>
+        }
+        else
+        {
+           <MudButton Size="Size.Small" OnClick="() => AddAward(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Przyznaj nagrodę</MudButton> 
+        }
+        </MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -35,5 +60,18 @@
     protected override async Task OnInitializedAsync()
     {
         Elements = await eventContoller.Get();
+    }
+
+    private async Task AddAward(Guid eventId)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("eventId", eventId);
+        var dialog = DialogService.Show<AddAwardDialog>("Dodaj nagrodę", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Elements = await eventContoller.Get();
+            StateHasChanged();
+        }
     }
 }

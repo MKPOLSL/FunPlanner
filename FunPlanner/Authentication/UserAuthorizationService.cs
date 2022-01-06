@@ -7,16 +7,18 @@ public class UserAuthorizationService
 {
     private readonly ILocalStorageService localStorageService;
     private readonly IPersonController personController;
+    private readonly IAuthorizationController authorizationController;
 
-    public UserAuthorizationService(ILocalStorageService localStorageService, IPersonController personController)
+    public UserAuthorizationService(ILocalStorageService localStorageService, IPersonController personController, IAuthorizationController authorizationController)
     {
         this.localStorageService = localStorageService;
         this.personController = personController;
+        this.authorizationController = authorizationController;
     }
 
     public async Task<PersonLoginDto?> LoginUser(UserLoginDto employee)
     {
-        var validationResult = await personController.ValidateUser(employee.Email, employee.Password);
+        var validationResult = await authorizationController.ValidateUser(employee.Email, employee.Password);
 
         if (validationResult.IsValidated == false)
             return null;

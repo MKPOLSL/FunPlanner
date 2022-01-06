@@ -18,9 +18,6 @@ namespace FunPlannerShared.Controllers
         [Get("/person/Get-by-email/{email}")]
         Task<PersonLoginDto?> GetByEmail(string email);
 
-        [Get("/person/validate")]
-        Task<ValidationResult> ValidateUser(string email, string password);
-
         [Post("/person/point")]
         Task AddPoint(Guid personId);
     }

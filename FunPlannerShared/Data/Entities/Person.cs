@@ -12,7 +12,8 @@ namespace FunPlannerShared.Data.Entities
 
         public ICollection<CalendarEvent>? CreatedEvents { get; set; }
         public ICollection<EventParticipants>? ParticipatedEvents { get; set; }
-        public ICollection<Note>? Notes { get; set; }
+        public ICollection<Note>? FromNotes { get; set; }
+        public ICollection<Note>? ToNotes { get; set; }
         public ICollection<Award>? Awards { get; set; }
         public virtual Password Password { get; set; }
     }

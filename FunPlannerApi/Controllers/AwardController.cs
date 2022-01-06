@@ -22,16 +22,33 @@ namespace FunPlannerApi.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet()]
-        public Task Get()
+        [HttpGet("award/{id}")]
+        public Task<AwardDto> Get(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost()]
+        [HttpGet("/award")]
+        public Task<ICollection<AwardDto>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("/award")]
         public Task AddAward(Guid personId, Guid eventId, AwardType awardType, string? message)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpGet("/award/get-by-person-id/{id}")]
+        public async Task<ICollection<AwardDto>> GetByPersonId(Guid id)
+        {
+            var award = await Context.Set<Award>()
+                .Include(a => a.CalendarEvent)
+                .Where(a => a.PersonId == id)
+                .FirstOrDefaultAsync();
+
+            return Mapper.Map<ICollection<AwardDto>>(award);
         }
     }
 }

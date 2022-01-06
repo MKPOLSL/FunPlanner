@@ -43,13 +43,14 @@
     private async Task AddNoteToUser()
     {
         note.PersonId = PersonId;
+        UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
         if(note.Content == null)
         {
             Snackbar.Add("Pusta notatka!", Severity.Error);
             return;
         }
 
-        await noteController.AddNote(PersonId, note.Content);
+        await noteController.AddNote(userDto.Id, PersonId, note.Content);
         if(AddPoint)
             await personController.AddPoint(PersonId);
         Snackbar.Add("Dodano notatkę!", Severity.Success);

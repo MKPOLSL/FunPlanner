@@ -41,9 +41,16 @@ namespace FunPlannerApi.Data
                 .WithOne(p => p.Person);
 
             modelBuilder.Entity<Note>()
-                .HasOne(p => p.Person)
-                .WithMany(p => p.Notes)
-                .HasForeignKey(n => n.PersonId);
+                .HasOne(p => p.ToPerson)
+                .WithMany(p => p.ToNotes)
+                .HasForeignKey(n => n.ToPersonId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Note>()
+                .HasOne(p => p.FromPerson)
+                .WithMany(p => p.FromNotes)
+                .HasForeignKey(n => n.FromPersonId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Award>()
                 .HasOne(p => p.Person)

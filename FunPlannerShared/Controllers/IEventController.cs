@@ -9,16 +9,22 @@ namespace FunPlannerShared.Controllers
         [Post("/event")]
         Task Post(CalendarEventCreateDto calendarEvent);
         
-        [Post("/sign-me")]
+        [Post("/event/sign-me")]
         Task AssignPersonToEvent(Guid eventId, Guid personId);
 
         [Get("/event")]
         Task<ICollection<CalendarEvent>> Get();
 
-        [Get("/calendar")]
+        [Get("/event/{id}/participants")]
+        Task<CalendarEventDto> GetWithParticipants(Guid id);
+
+        [Get("/event/calendar")]
         Task<ICollection<CalendarEventCalendarDto>> GetForCalendar();
 
-        [Get("/upcoming")]
+        [Get("/event/upcoming")]
         Task<ICollection<UpcomingEventDto>> GetUpcoming();
+
+        [Delete("/event/{id}")]
+        Task Delete(Guid id);
     }
 }

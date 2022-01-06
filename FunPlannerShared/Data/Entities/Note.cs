@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FunPlannerShared.Data.Entities
+﻿namespace FunPlannerShared.Data.Entities
 {
     public class Note : IdentityEntity
     {
-        public Guid PersonId { get; set; }
+        public Guid ToPersonId { get; set; }
+        public Person ToPerson { get; set; }
+        public Guid FromPersonId { get; set; }
+        public Person FromPerson { get; set; }
         public string Content { get; set; }
-        public Person Person { get; set; }
     }
 }

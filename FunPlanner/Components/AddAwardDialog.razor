@@ -1,0 +1,102 @@
+﻿@using Blazored.LocalStorage
+@using FunPlanner.Colors
+@using FunPlanner.Models
+@using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Dtos
+@using FunPlannerShared.Data.Enums
+@using MudBlazor
+@using FunPlannerShared.Data.Entities
+@inject ISnackbar Snackbar
+@inject IEventController eventController
+@inject ILocalStorageService storage
+@inject IPersonController personController
+@inject IAwardController awardController
+@inject AuthenticationStateProvider authStateProvider
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.BookmarkAdd" Class="mr-3 mb-n1" />
+            Dodaj nagrodę
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+
+        @if (persons != null && persons.Count() != 0)
+        {
+            <MudGrid>
+                <MudItem sm="6">
+                    <MudPaper>
+                        <MudList>
+                            @foreach (PersonDto p in persons)
+                            {
+                                <MudListItem Avatar="@Icons.Filled.AddReaction" Style="@MudColors.GetRandomColorCssBackground()">
+                                    <div class="mud-list-item-avatar">
+
+                                    </div>
+                                    @p.FirstName @p.LastName
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </MudPaper>
+                </MudItem>
+                <MudItem sm="6">
+                    <MudPaper>
+                        <MudList>
+                            @foreach (AwardType at in Enum.GetValues(typeof(AwardType)))
+                            {
+                                <MudListItem Avatar="@Icons.Filled.AutoAwesome" Style="@MudColors.GetRandomColorCssBackground()">
+                                    @at
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudText>Niestety nikt nie zapisał się na to wydarzenie.</MudText>
+        }
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Anuluj</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddAward">Dodaj</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [ParameterAttribute] public Guid eventId { get; set; }
+
+    [Parameter] public AwardDto award { get; set; } = new();
+
+    private ICollection<PersonDto> persons { get; set; }
+    private CalendarEventDto calendarEvent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        calendarEvent = await eventController.GetWithParticipants(eventId);
+        persons = calendarEvent.Participants;
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private async Task AddAward()
+    {
+        //note.PersonId = PersonId;
+        //if(note.Content == null)
+        //{
+        //    Snackbar.Add("Pusta notatka!", Severity.Error);
+        //    return;
+        //}
+
+        //await awardController.AddAward(personId, eventId, AwardType.Helper, "message");
+        Snackbar.Add("Dodano nagrodę!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(eventId));
+    }
+}

@@ -60,27 +60,12 @@ namespace FunPlannerApi.Controllers
             };
         }
 
-        [HttpGet("/person/validate", Name = "ValidateUser")]
-        public async Task<ValidationResult> ValidateUser([FromQuery] string email, [FromQuery] string password)
-        {
-            var person = await Context.Set<Person>()
-                .Include(p => p.Password)
-                .Where(p => p.Email == email)
-                .FirstOrDefaultAsync();
-
-            var result = password == person?.Password.Passwd ?
-                new ValidationResult { IsValidated = true } :
-                new ValidationResult { IsValidated = false };
-
-            return result;
-        }
-
         [HttpPost("/person/note")]
         public async Task AddNote(Guid personId, string note)
         {
             var newNote = new Note
             {
-                PersonId = personId,
+                ToPersonId = personId,
                 Content = note
             };
             Context.Add(newNote);
