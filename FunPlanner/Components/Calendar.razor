@@ -5,65 +5,45 @@
 @*@inject ICalendarEventsProvider eventsProvider*@
 
 <!-- Calendar -->
-            <div class="calendar">
-                <div class="row">
-                    <div class="col-sm-12 col-lg-2">
-                        <select  name="" id="" class="fluent-input" @bind="SelectedYear">
-                            @for (int i = 2020; i < 2024; i++)
-                            {
-                                <option>@i</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-sm-12 col-lg-2">
-                        <select name="" id="" class="fluent-input" @bind="SelectedMonth">
-                            <option value="1">Styczeñ</option>
-                            <option value="2">Luty</option>
-                            <option value="3">Marzec</option>
-                            <option value="4">Kwiecieñ</option>
-                            <option value="5">Maj</option>
-                            <option value="6">Czerwiec</option>
-                            <option value="7">Lipiec</option>
-                            <option value="8">Sierpieñ</option>
-                            <option value="9">Wrzesieñ</option>
-                            <option value="10">PaŸdziernik</option>
-                            <option value="11">Listopad</option>
-                            <option value="12">Grudzieñ</option>
-                        </select>
-                    </div>
-                </div>
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th>Pon.</th>
-                        <th>Wt.</th>
-                        <th>Œr.</th>
-                        <th>Czw.</th>
-                        <th>Pt.</th>
-                        <th>Sob.</th>
-                        <th>Niedz.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int r = 0; r < rowsCount; r++)
+<div class="calendar">
+    <div class="d-flex">
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Filled.ChevronLeft" OnClick="() => MoveMonth(MoveDirection.Previous)">@selectedDate.AddMonths(-1).ToString("Y")</MudButton>
+        <MudText Typo="Typo.h6" Align="Align.Center" Class="flex-grow-1">@selectedDate.ToString("Y")</MudText>
+        <MudButton Variant="Variant.Text" EndIcon="@Icons.Filled.ChevronRight" OnClick="() => MoveMonth(MoveDirection.Next)">@selectedDate.AddMonths(1).ToString("Y")</MudButton>
+    </div>
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th>Pon.</th>
+                <th>Wt.</th>
+                <th>Œr.</th>
+                <th>Czw.</th>
+                <th>Pt.</th>
+                <th>Sob.</th>
+                <th>Niedz.</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int r = 0; r < rowsCount; r++)
+            {
+                <tr>
+                    @foreach (var item in days.Skip(r * 7).Take(7))
                     {
-                        <tr>
-                            @foreach (var item in days.Skip(r * 7).Take(7))
-                            {
-                                <td>@DayTemplate(item)</td>
-                            }
-                        </tr>
+                        <td>@DayTemplate(item)</td>
                     }
-                </tbody>
-            </table>
-        </div>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-@code 
+@code
 {
     protected override async Task OnInitializedAsync()
     {
         selectedYear = currentDate.Year;
         selectedMonth = currentDate.Month;
+        selectedDate = new DateTime(selectedYear, selectedMonth, 1);
 
         Events = await eventController.GetForCalendar();
 
@@ -71,10 +51,11 @@
     }
 
     private DateTime currentDate = DateTime.Now;
-    private int selectedYear = 0; 
+    private int selectedYear = 0;
     private int selectedMonth = 0;
 
-    private int SelectedYear {
+    private int SelectedYear
+    {
         get => selectedYear;
         set
         {
@@ -83,7 +64,8 @@
         }
     }
 
-    private int SelectedMonth {
+    private int SelectedMonth
+    {
         get => selectedMonth;
         set
         {
@@ -93,14 +75,16 @@
     }
 
     private Day selectedDay = new Day
-    {
-        Date = DateTime.Now
-    };
+        {
+            Date = DateTime.Now
+        };
+
+    private DateTime selectedDate;
 
     [Parameter]
     public RenderFragment<Day> DayTemplate { get; set; }
 
-    private ICollection<CalendarEventCalendarDto> Events {  get;  set; }
+    private ICollection<CalendarEventCalendarDto> Events { get; set; }
 
     private List<Day> days = new();
     private int rowsCount = 0;
@@ -109,36 +93,37 @@
     {
         days = new List<Day>();
 
-        //calculate the number of empty days 
+        //calculate the number of empty days
         var firstDayDate = new DateTime(SelectedYear, SelectedMonth, 1);
+        selectedDate = firstDayDate;
         int weekDayNumber = (int)firstDayDate.DayOfWeek;
         int numberOfEmptyDays = weekDayNumber - 1;
 
-        //add empty days 
+        //add empty days
         for (int i = 0; i < numberOfEmptyDays; i++)
         {
             days.Add(new Day
-            {
-                DayNumber = 0,
-                IsEmpty = true
-            });
+                {
+                    DayNumber = 0,
+                    IsEmpty = true
+                });
         }
 
-        //add month days 
+        //add month days
         int numberOfDaysInMonth = DateTime.DaysInMonth(SelectedYear, SelectedMonth);
 
         for (int i = 0; i < numberOfDaysInMonth; i++)
         {
             days.Add(new Day
-            {
-                DayNumber = i + 1,
-                IsEmpty = false,
-                Date = new DateTime(SelectedYear, SelectedMonth, i + 1),
-                Events = Events.Where(e => e.Start.Date == new DateTime(SelectedYear, SelectedMonth, i + 1).Date).ToList()
-            });
+                {
+                    DayNumber = i + 1,
+                    IsEmpty = false,
+                    Date = new DateTime(SelectedYear, SelectedMonth, i + 1),
+                    Events = Events.Where(e => e.Start.Date == new DateTime(SelectedYear, SelectedMonth, i + 1).Date).ToList()
+                });
         }
 
-        //calcualte number of rows 
+        //calcualte number of rows
         int remaning = days.Count % 7;
         if (remaning == 0)
             rowsCount = days.Count / 7;
@@ -147,5 +132,39 @@
 
         StateHasChanged();
         Console.WriteLine($"Total Rows: {rowsCount} | Number of Empty Days {numberOfEmptyDays} | Month Days {numberOfDaysInMonth}");
+    }
+
+    private void MoveMonth(MoveDirection direction)
+    {
+        if (direction == MoveDirection.Next)
+        {
+            if (SelectedMonth == 12)
+            {
+                selectedMonth = 1;
+                SelectedYear++;
+            }
+            else
+            {
+                SelectedMonth += 1;
+            }
+        }
+        else
+        {
+            if (selectedMonth == 1)
+            {
+                selectedMonth = 12;
+                SelectedYear--;
+            }
+            else
+            {
+                SelectedMonth -= 1;
+            }
+        }
+    }
+
+    private enum MoveDirection
+    {
+        Previous,
+        Next
     }
 }

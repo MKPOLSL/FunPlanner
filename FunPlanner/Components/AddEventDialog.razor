@@ -18,7 +18,7 @@
     </TitleContent>
     <DialogContent>
         <MudTextField @bind-Value="newEvent.Name" Label="Nazwa wydarzenia" Variant="Variant.Text"></MudTextField>
-        <MudTextField @bind-Value="newEvent.Description" Label="Opis" Variant="Variant.Text" Lines="4"></MudTextField>
+        <MudTextField @bind-Value="newEvent.Description" Label="Opis" Variant="Variant.Text" Lines="2"></MudTextField>
         <MudTextField @bind-Value="newEvent.Place" Label="Miejsce wydarzenia" Variant="Variant.Text"></MudTextField>
         <MudDatePicker @bind-date="StartDate" Label="Start"/>
         <MudTimePicker Label="godzina" AmPm="false" @bind-Time="StartSpan"/>
@@ -36,13 +36,13 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public CalendarEventCreateDto newEvent { get; set; } = new();
+    public CalendarEventCreateDto newEvent { get; set; } = new();
 
     private TimeSpan? StartSpan { get; set; } = new TimeSpan(10, 15, 30);
     private TimeSpan? EndSpan { get; set; } = new TimeSpan(10, 15, 30);
 
-    private DateTime? StartDate { get; set; } = DateTime.Now;
-    private DateTime? EndDate { get; set; } = DateTime.Now;
+    [Parameter] public DateTime? StartDate { get; set; }
+    [Parameter] public DateTime? EndDate { get; set; }
 
     private bool IsLimited { get; set; } = false;
     private int? Limit { get; set; }

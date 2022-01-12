@@ -15,9 +15,6 @@
         public CalendarEventCreateDto()
         {
             Id = Guid.NewGuid();
-            Name = "Nazwa";
-            Description = "Opis";
-            Place = "Miejsce";
             Start = DateTime.Now;
             End = DateTime.Now;
         }

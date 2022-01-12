@@ -69,7 +69,6 @@
         if (user != null)
         {
             ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
-            //carContext.currentUser = user;
             NavigationManager.NavigateTo("/");
         }
         else

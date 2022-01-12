@@ -21,6 +21,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, $"{userDto.FirstName} {userDto.LastName}"),
+                new Claim(ClaimTypes.Role, userDto.Role.ToString()),
             }, "user");
         }
         var user = new ClaimsPrincipal(identity);
@@ -33,7 +34,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         var identity = new ClaimsIdentity(new[]
         {
             new Claim(ClaimTypes.Name, $"{person.FirstName} {person.LastName}"),
-                //new Claim(ClaimTypes.Role, employee.Role.ToString())
+            new Claim(ClaimTypes.Role, person.Role.ToString())
         }, "apiauth_type");
 
         var user = new ClaimsPrincipal(identity);

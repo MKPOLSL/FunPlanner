@@ -32,7 +32,8 @@ public class UserAuthorizationService
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email
+                Email = user.Email,
+                Role = user.Role
             });
             return user;
         }

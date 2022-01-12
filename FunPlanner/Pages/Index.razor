@@ -10,56 +10,63 @@
 @inject IDialogService DialogService
 
 <AuthorizeView>
-<Authorized>
-<PageTitle>Index</PageTitle>
+    <Authorized>
+        <PageTitle>Index</PageTitle>
 
- <div class="row">
-<!-- Calendar -->
-        <div class="col-sm-12 col-md-12 col-lg-9">
-            <Calendar>
-                <DayTemplate Context="day">
-                    @{
-                        string currentDayClass = day.Date == DateTime.Now.Date ? "current-day" : "";
-                        string selectedDayClass = day == selectedDay ? "selected-day" : "";
-                    }
-                    @if(!day.IsEmpty)
-                    {
-                        <div class="day shadow-effect @currentDayClass @selectedDayClass" @onclick="() => selectedDay = day">
-                            <h3 class="ms-fontSize-24 ms-fontWeight-regular">@day.DayNumber</h3>
-                            @if(day.Events != null && day.Events.Count() != 0)
-                            {
-                                var firstEvent = day.Events.FirstOrDefault();
-                                <div class="day-event">
-                                    @if(firstEvent.Name.Length > 25)
+        <div class="row">
+            <!-- Calendar -->
+            <div class="col-sm-12 col-md-12 col-lg-9">
+                <Calendar>
+                    <DayTemplate Context="day">
+                        @{
+                            string currentDayClass = day.Date == DateTime.Now.Date ? "current-day" : "";
+                            string selectedDayClass = day == selectedDay ? "selected-day" : "";
+                            const int maxDisplayedEvents = 2;
+                        }
+                        @if (!day.IsEmpty)
+                        {
+                            <div class="day @currentDayClass @selectedDayClass" @onclick="() => selectedDay = day">
+                                <h3>@day.DayNumber</h3>
+                                @if (day.Events != null && day.Events.Any())
+                                {
+                                    for (var i = 0; i < maxDisplayedEvents; ++i)
                                     {
-                                        @firstEvent.Name.Substring(0, 25)<text>...</text>
+                                        if (i >= day.Events.Count())
+                                        {
+                                            break;
+                                        }
+                                        var dayEvent = day.Events.ElementAt(i);
+                                        <div class="day-event px-1 mb-1">
+                                            @if (dayEvent.Name.Length > 25)
+                                            {
+                                                @dayEvent.Name.Substring(0, 25)
+
+                                                <text>...</text>
+                                            }
+                                            else
+                                            {
+                                                @dayEvent.Name
+                                            }
+                                        </div>
                                     }
-                                    else
+
+                                    if (day.Events.Count() > maxDisplayedEvents)
                                     {
-                                         @firstEvent.Name
+                                        <text>+</text>
+                                        @(day.Events.Count() - maxDisplayedEvents)
                                     }
+                                }
+                                <div class="day-add-event-btn">
+                                    <MudIconButton Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" Icon="@Icons.Filled.Add" OnClick="() => OpenDialog(day)" />
                                 </div>
-                            }
-                        </div>
-                    }
-                </DayTemplate>
-            </Calendar>
-       </div>
-
-
-         <!-- Day Menu -->
-        <div class="col-sm-12 col-md-12 col-lg-3">
-            <AddEvent SelectedDay="@selectedDay" />
-
-            <EventsList SelectedDay="@selectedDay" />
+                            </div>
+                        }
+                    </DayTemplate>
+                </Calendar>
+            </div>
         </div>
- </div>
 
- <MudButton OnClick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
-    Dodaj wydarzenie
-</MudButton>
-
-</Authorized>
+    </Authorized>
     <NotAuthorized>
         <div>Proszę się zalogować</div>
     </NotAuthorized>
@@ -73,12 +80,17 @@
     }
 
     private Day selectedDay = new Day
-    {
-        Date = DateTime.Now
-    };
+        {
+            Date = DateTime.Now
+        };
 
-    private void OpenDialog()
+    private void OpenDialog(Day day)
     {
-        DialogService.Show<AddEventDialog>("Dodaj wydarzenie", new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var parameters = new DialogParameters
+        {
+            { nameof(AddEventDialog.StartDate), day.Date },
+            { nameof(AddEventDialog.EndDate), day.Date }
+        };
+        DialogService.Show<AddEventDialog>("Dodaj wydarzenie", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
     }
  }

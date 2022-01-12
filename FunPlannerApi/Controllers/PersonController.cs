@@ -57,6 +57,7 @@ namespace FunPlannerApi.Controllers
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Email = person.Email,
+                Role = person.Role
             };
         }
 

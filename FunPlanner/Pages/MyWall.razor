@@ -13,48 +13,58 @@
 @inject HttpClient httpClient
 @inject IDialogService DialogService
 
-<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h2">Moje osiągnięcia</MudText>
+<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Moje osiągnięcia</MudText>
 <MudDivider />
 
 <MudGrid>
     <MudItem xs="12">
         <MudGrid Spacing="2" Justify="Justify.Center">
             <MudItem xs="6">
-                <MudPaper Style="height:60em;">
-
-                    <MudText Align="Align.Center" Typo="Typo.h3">Notatki</MudText> <MudDivider />
-                    @if (notes != null && notes.Count() > 0)
-                    {
-                        foreach (var n in notes)
+                <MudPaper Class="d-flex flex-column" Style="height:78vh;">
+                    <MudText Align="Align.Center" Typo="Typo.h5">Notatki</MudText>
+                    <MudDivider />
+                    <div class="pa-4 overflow-auto">
+                        @if (notes != null && notes.Any())
                         {
-                            <MudText>@n.Content</MudText>
-                            <MudText>Notatka od: @n.FromFirstName @n.FromLastName</MudText>
+                            foreach (var n in notes)
+                            {
+                                <MudCard Class="mb-2">
+                                    <MudCardContent>
+                                        <MudText>@n.Content</MudText>
+                                        <MudText Typo="Typo.subtitle2">Notatka od: @n.FromFirstName @n.FromLastName</MudText>
+                                    </MudCardContent>
+                                </MudCard>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <MudText>Niestety jeszcze nikt nie dodał dla ciebie notatki :(</MudText>
-                    }
-
+                        else
+                        {
+                            <MudText>Niestety jeszcze nikt nie dodał dla ciebie notatki :(</MudText>
+                        }
+                    </div>
                 </MudPaper>
             </MudItem>
             <MudItem xs="6">
-                <MudPaper Style="height:60em;">
-
-                    <MudText Align="Align.Center" Typo="Typo.h3">Nagrody</MudText> <MudDivider />
-                    @if (awards != null && awards.Count() > 0)
-                    {
-                        foreach (var a in awards)
+                <MudPaper Class="d-flex flex-column" Style="height:78vh;">
+                    <MudText Align="Align.Center" Typo="Typo.h5">Nagrody</MudText>
+                    <MudDivider />
+                    <div class="pa-4 overflow-auto">
+                        @if (awards != null && awards.Any())
                         {
-                            <MudText>@a.AwardType</MudText>
-                            <MudText>nagroda za wydarzenie: @a.CalendarEventName</MudText>
+                            foreach (var a in awards)
+                            {
+                                <MudCard Class="mb-2">
+                                    <MudCardContent>
+                                        <MudText>@a.AwardType</MudText>
+                                        <MudText Typo="Typo.subtitle2">nagroda za wydarzenie: @a.CalendarEventName</MudText>
+                                    </MudCardContent>
+                                </MudCard>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <MudText>Niestety jeszcze nie dostałeś żadnej nagrody :(</MudText>
-                    }
-
+                        else
+                        {
+                            <MudText>Niestety jeszcze nie dostałeś żadnej nagrody :(</MudText>
+                        }
+                    </div>
                 </MudPaper>
             </MudItem>
         </MudGrid>

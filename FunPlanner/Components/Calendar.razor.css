@@ -1,7 +1,11 @@
-﻿.calendar-table {
+﻿.calendar {
+    width: 80%;
+}
+
+.calendar-table {
     border-collapse: collapse;
     border-spacing: 0.5rem;
-    width: 80%;
+    width: 100%;
     table-layout: fixed;
 }
 
@@ -12,11 +16,10 @@ td, th {
 td {
     vertical-align: top;
     height: 8rem;
-    padding: 0.2rem;
 }
 
 td:hover {
-    background-color: plum;
+    background-color: var(--mud-palette-primary-xx-light);
 }
 
 th {

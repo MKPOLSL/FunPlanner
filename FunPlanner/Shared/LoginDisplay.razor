@@ -8,17 +8,17 @@
 
 <AuthorizeView>
     <Authorized>
-        <div class="hello-message">
-            Witaj @context.User.Identity?.Name!
+        <div class="hello-message mr-2">
+            <MudText Align="Align.Center">Witaj @context.User.Identity?.Name!</MudText>
         </div>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" OnClick="BeginSignOut">Log out</MudButton>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login">Log in</a>
+        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" Link="authentication/login">Log in</MudButton>
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
+@code {
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

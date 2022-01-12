@@ -1,7 +1,26 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+:root {
+    --mud-palette-primary-xx-light: rgba(var(--mud-palette-primary-rgb), 0.2);
+    --mud-palette-primary-x-light: rgba(var(--mud-palette-primary-rgb), 0.4);
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.white-button {
+    border: 1px solid white !important;
+    color: white !important;
+}
+
+    .white-button:hover {
+        border: 1px solid var(--mud-palette-secondary) !important;
+        color: var(--mud-palette-secondary) !important;
+    }
+
+.overflow-auto {
+    overflow-y: auto;
 }
 
 h1:focus {
