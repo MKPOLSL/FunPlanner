@@ -21,44 +21,45 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-
-        @if (persons != null && persons.Count() != 0)
-        {
-            <MudGrid>
-                <MudItem sm="6">
-                    <MudPaper>
-                        <MudList>
-                            @foreach (PersonDto p in persons)
-                            {
-                                <MudListItem Avatar="@Icons.Filled.AddReaction" Style="@MudColors.GetRandomColorCssBackground()">
-                                    <div class="mud-list-item-avatar">
-
-                                    </div>
-                                    @p.FirstName @p.LastName
-                                </MudListItem>
-                            }
-                        </MudList>
-                    </MudPaper>
-                </MudItem>
-                <MudItem sm="6">
-                    <MudPaper>
-                        <MudList>
-                            @foreach (AwardType at in Enum.GetValues(typeof(AwardType)))
-                            {
-                                <MudListItem Avatar="@Icons.Filled.AutoAwesome" Style="@MudColors.GetRandomColorCssBackground()">
-                                    @at
-                                </MudListItem>
-                            }
-                        </MudList>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        }
-        else
-        {
-            <MudText>Niestety nikt nie zapisał się na to wydarzenie.</MudText>
-        }
-
+        <div>
+            @if (persons != null && persons.Count() != 0)
+            {
+                <MudGrid>
+                    <MudItem sm="6">
+                        <MudPaper>
+                            <MudList>
+                                @foreach (PersonDto p in persons)
+                                {
+                                    <MudListItem Class="list-item">
+                                        <MudAvatar Class="mr-2" Style="@MudColors.GetRandomColorCssBackground()">@p.FirstName[0]@p.LastName[0]</MudAvatar>
+                                        @p.FirstName @p.LastName
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem sm="6">
+                        <MudPaper>
+                            <MudList>
+                                @foreach (AwardType at in Enum.GetValues(typeof(AwardType)))
+                                {
+                                    <MudListItem Class="list-item">
+                                        <MudAvatar Class="mr-2" Style="@MudColors.GetRandomColorCssBackground()">
+                                            <MudIcon Icon="@Icons.Filled.AutoAwesome" />
+                                        </MudAvatar>
+                                        @at
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            }
+            else
+            {
+                <MudText>Niestety nikt nie zapisał się na to wydarzenie.</MudText>
+            }
+        </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Anuluj</MudButton>

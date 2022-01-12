@@ -1,0 +1,4 @@
+﻿::deep .list-item p {
+    display: inline-flex;
+    align-items: center;
+}
