@@ -35,9 +35,16 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpPost("/award")]
-        public Task AddAward(Guid personId, Guid eventId, AwardType awardType, string? message)
+        public async Task AddAward(Guid personId, Guid eventId, AwardType awardType, string? message)
         {
-            throw new NotImplementedException();
+            Award award = new()
+            {
+                PersonId = personId,
+                CalendarEventId = eventId,
+                AwardType = awardType
+            };
+            Context.Add(award);
+            await Context.SaveChangesAsync();
         }
 
         [HttpGet("/award/get-by-person-id/{id}")]

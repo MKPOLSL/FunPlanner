@@ -1,5 +1,7 @@
 ﻿@page "/my-events"
+@using Blazored.LocalStorage
 @using FunPlanner.Components
+@using FunPlanner.Models
 @using FunPlanner.Models.Calendar
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Entities
@@ -7,6 +9,7 @@
 @inject IPersonController person
 @inject IEventController eventContoller
 @inject IDialogService DialogService
+@inject ILocalStorageService storage
 
 <PageTitle>My Events</PageTitle>
 <MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Moje wydarzenia</MudText> <MudDivider />
@@ -42,9 +45,13 @@
         <MudTd DataLabel="Nagroda">
         @if (context.End > DateTime.Now)
         {
-            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Nie zakończono</MudButton>
-        }
-        else
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Nie zakończono</MudButton>
+            }
+            else if(context.Award != null)
+            {
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Już przyznano</MudButton>
+            }
+            else
         {
            <MudButton Size="Size.Small" OnClick="() => AddAward(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Przyznaj nagrodę</MudButton> 
         }
@@ -59,7 +66,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
         Elements = await eventContoller.Get();
+        //Elements = Elements.Where(e => e.CreatorId == userDto.Id).ToList();
     }
 
     private async Task AddAward(Guid eventId)

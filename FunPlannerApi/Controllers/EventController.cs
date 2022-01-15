@@ -102,6 +102,7 @@ namespace FunPlannerApi.Controllers
                 .Where(e => e.Id == id)
                 .Include(e => e.Participants)
                     .ThenInclude(e => e.Person)
+                    .Include(e => e.Award)
                 .FirstOrDefaultAsync();
             return Mapper.Map<CalendarEventDto>(calendarEvent);
         }

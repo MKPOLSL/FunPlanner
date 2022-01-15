@@ -92,5 +92,6 @@
             { nameof(AddEventDialog.EndDate), day.Date }
         };
         DialogService.Show<AddEventDialog>("Dodaj wydarzenie", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        StateHasChanged(); 
     }
  }

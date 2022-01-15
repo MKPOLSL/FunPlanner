@@ -27,10 +27,10 @@
                 <MudGrid>
                     <MudItem sm="6">
                         <MudPaper>
-                            <MudList>
+                            <MudList Clickable="true" @bind-SelectedValue="@selectedPersonId">
                                 @foreach (PersonDto p in persons)
                                 {
-                                    <MudListItem Class="list-item">
+                                    <MudListItem Class="list-item" Value="p.Id">
                                         <MudAvatar Class="mr-2" Style="@MudColors.GetRandomColorCssBackground()">@p.FirstName[0]@p.LastName[0]</MudAvatar>
                                         @p.FirstName @p.LastName
                                     </MudListItem>
@@ -40,10 +40,10 @@
                     </MudItem>
                     <MudItem sm="6">
                         <MudPaper>
-                            <MudList>
+                            <MudList Clickable="true" @bind-SelectedValue="@selectedAwardType">
                                 @foreach (AwardType at in Enum.GetValues(typeof(AwardType)))
                                 {
-                                    <MudListItem Class="list-item">
+                                    <MudListItem Class="list-item" Value="at">
                                         <MudAvatar Class="mr-2" Style="@MudColors.GetRandomColorCssBackground()">
                                             <MudIcon Icon="@Icons.Filled.AutoAwesome" />
                                         </MudAvatar>
@@ -76,6 +76,9 @@
     private ICollection<PersonDto> persons { get; set; }
     private CalendarEventDto calendarEvent { get; set; }
 
+    private object selectedPersonId;
+    private object selectedAwardType;
+
     protected override async Task OnInitializedAsync()
     {
         calendarEvent = await eventController.GetWithParticipants(eventId);
@@ -89,14 +92,13 @@
 
     private async Task AddAward()
     {
-        //note.PersonId = PersonId;
-        //if(note.Content == null)
-        //{
-        //    Snackbar.Add("Pusta notatka!", Severity.Error);
-        //    return;
-        //}
+        if (selectedPersonId == null || selectedAwardType == null)
+        {
+            Snackbar.Add("Nie wybrano osoby lub nagrody!", Severity.Error);
+            return;
+        }
 
-        //await awardController.AddAward(personId, eventId, AwardType.Helper, "message");
+        await awardController.AddAward((Guid)selectedPersonId, eventId, (AwardType)selectedAwardType, "message");
         Snackbar.Add("Dodano nagrodę!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(eventId));
     }

@@ -26,6 +26,7 @@ namespace FunPlannerApi.Controllers
         {
             var newNote = new Note
             {
+                FromPersonId = FromPersonId,
                 ToPersonId = ToPersonId,
                 Content = note
             };
