@@ -85,6 +85,12 @@
     private List<Day> days = new();
     private int rowsCount = 0;
 
+    public async Task Refresh()
+    {
+        Events = await eventController.GetForCalendar();
+        UpdateCalendar();
+    }
+
     void UpdateCalendar()
     {
         days = new List<Day>();

@@ -1,17 +1,20 @@
-﻿@using MudBlazor
+﻿@using FunPlannerShared.Data.Enums
+@using MudBlazor
 @inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 
 <MudThemeProvider Theme="MyCustomTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
-@*<AuthorizeView>
-<Authorized>*@
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
+<div class="page">
+    <AuthorizeView Roles="@($"{Role.User}, {Role.Admin}")">
+        <Authorized>
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        </Authorized>
+    </AuthorizeView>
     <main>
         <div class="top-row px-4">
             <LoginDisplay />

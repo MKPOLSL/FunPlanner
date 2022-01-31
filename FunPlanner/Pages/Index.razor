@@ -16,7 +16,7 @@
         <div class="row">
             <!-- Calendar -->
             <div class="col-sm-12 col-md-12 col-lg-9">
-                <Calendar>
+                <Calendar @ref="calendar">
                     <DayTemplate Context="day">
                         @{
                             string currentDayClass = day.Date == DateTime.Now.Date ? "current-day" : "";
@@ -68,14 +68,15 @@
 
     </Authorized>
     <NotAuthorized>
-        <div>Proszę się zalogować</div>
+        <MudAlert NoIcon="true" Severity="Severity.Warning">Proszę się zalogować</MudAlert>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
+    private Calendar calendar;
+
     protected override async Task OnInitializedAsync()
     {
-        var people = await person.Get();
         await base.OnInitializedAsync();
     }
 
@@ -84,14 +85,19 @@
             Date = DateTime.Now
         };
 
-    private void OpenDialog(Day day)
+    private async Task OpenDialog(Day day)
     {
         var parameters = new DialogParameters
         {
             { nameof(AddEventDialog.StartDate), day.Date },
             { nameof(AddEventDialog.EndDate), day.Date }
         };
-        DialogService.Show<AddEventDialog>("Dodaj wydarzenie", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
-        StateHasChanged(); 
+        var dialog = DialogService.Show<AddEventDialog>("Dodaj wydarzenie", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var dialogResult = await dialog.Result;
+
+        if (!dialogResult.Cancelled)
+        {
+            await calendar.Refresh();
+        }
     }
  }

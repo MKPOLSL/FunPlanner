@@ -7,55 +7,28 @@
 @inject NavigationManager NavigationManager
 @inject UserAuthorizationService authorizationService
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject ISnackbar snackbar
+@using MudBlazor
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
 
-<center>
-    <div class="col-8 card">
-        <div class="col-12 row">
-            <p>&nbsp;</p>
-        </div>
-        <div class="col-12 row">
-            <div class="col-6" style="border-left:thick">
-                <EditForm Model="@userDto" OnValidSubmit="@SignIn">
-                    <DataAnnotationsValidator />
-                    <div>
-                        <br /><br /><br />
-                    </div>
-                    <div>
-                        <h3 style="font-weight:bold; color:grey">FunPlanner</h3>
-                    </div>
-                    <div>
-                        <br />
-                    </div>
-                    <div class="col-12 row login-input">
-                        <input type="text" class="form-control col-12" @bind="userDto.Email" placeholder="E-Mail" />
-                    </div>
-                    <br />
-                    <div class="col-12 row login-input">
-                        <input type="password" class="form-control col-12" @bind="userDto.Password" placeholder="Hasło" />
-                    </div>
-                    <br />
-                    <div class="col-12 row login-input">
-                        <span class="col-12"></span>
-                        <input type="submit" class="form-control col-6 btn btn-primary" value="Zaloguj się" />
-                    </div>
-                    <ValidationSummary />
-                    <br />
-                    <div class="col-12 row" style="text-align:left; font-weight:bold; color: red">
-                        <span class="col-12">@ErrorMessage</span>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
-        <div class="col-12 row">
-            <p>&nbsp;</p>
-        </div>
-    </div>
-</center>
+<MudPaper MaxWidth="400px" Class="pa-16 ma-auto">
+    <MudText Typo="Typo.h5">Logowanie</MudText>
+    <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
+        <MudTextField T="string" @bind-Value="userDto.Email" Label="Adres e-mail" Variant="Variant.Text" Required="true" RequiredError="Adres e-mail jest wymagany"
+                      Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wprowadzony adres e-mail jest niepoprawny"})" />
+        <MudTextField T="string" @bind-Value="userDto.Password" Label="Hasło" Variant="Variant.Text"
+                      InputType="InputType.Password" Required="true"
+                      RequiredError="Hasło jest wymagane" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="!success || submitting" Class="mt-6" OnClick="SignIn">Zaloguj</MudButton>
+    </MudForm>
+</MudPaper>
 
 @code {
+    bool success;
+    string[] errors = { };
+    bool submitting;
     private UserLoginDto userDto;
-    public string LoginMessage { get; set; }
-    public string ErrorMessage { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -63,21 +36,24 @@
         return base.OnInitializedAsync();
     }
 
-    private async Task<bool> SignIn()
+    private async Task SignIn()
     {
-        var user = await authorizationService.LoginUser(userDto);
-        if (user != null)
+        try
         {
-            ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
-            NavigationManager.NavigateTo("/");
+            submitting = true;
+            var user = await authorizationService.LoginUser(userDto);
+            if (user != null)
+            {
+                ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                snackbar.Add("Nie odnaleziono użytkownika z pasującymi danymi", Severity.Error);
+            }
         }
-        else
-        {
-            ErrorMessage = "Nie odnaleziono użytkownika z pasującymi danymi";
+        finally {
+            submitting = false;
         }
-        return await Task.FromResult(true);
-
     }
-
 }
-
