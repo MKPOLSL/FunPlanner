@@ -37,7 +37,10 @@ namespace FunPlannerApi.Controllers
         [HttpGet("/note")]
         public async Task<ICollection<NoteDto>> GetAll()
         {
-            var notes = await Context.Set<Note>().ToListAsync();
+            var notes = await Context.Set<Note>()
+                .Include(n => n.ToPerson)
+                .Include(n => n.FromPerson)
+                .ToListAsync();
             return Mapper.Map<ICollection<NoteDto>>(notes);
         }
 
@@ -56,6 +59,19 @@ namespace FunPlannerApi.Controllers
                 .Where(n => n.ToPersonId == id)
                 .ToListAsync();
             return Mapper.Map<ICollection<NoteDto>>(notes);
+        }
+
+        [HttpDelete("/note/{id}")]
+        public async Task Delete(Guid id)
+        {
+            var note = await Context.Set<Note>()
+                .FirstOrDefaultAsync(ce => ce.Id == id);
+
+            if (note == null)
+                throw new HttpRequestException("Note not found.");
+
+            Context.Remove(note);
+            await Context.SaveChangesAsync();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace FunPlannerShared.Controllers
         Task AssignPersonToEvent(Guid eventId, Guid personId);
 
         [Get("/event")]
-        Task<ICollection<CalendarEvent>> Get();
+        Task<ICollection<CalendarEventDto>> Get();
 
         [Get("/event/{id}/participants")]
         Task<CalendarEventDto> GetWithParticipants(Guid id);

@@ -11,10 +11,10 @@
         <div class="hello-message mr-2">
             <MudText Align="Align.Center">Witaj @context.User.Identity?.Name!</MudText>
         </div>
-        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" OnClick="BeginSignOut">Log out</MudButton>
+        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" OnClick="BeginSignOut">Wyloguj</MudButton>
     </Authorized>
     <NotAuthorized>
-        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" Link="authentication/login">Log in</MudButton>
+        <MudButton Class="white-button" Variant="Variant.Outlined" Size="Size.Small" Link="authentication/login">Zaloguj</MudButton>
     </NotAuthorized>
 </AuthorizeView>
 

@@ -17,7 +17,7 @@ namespace FunPlannerApi.Automapper
 
             CreateMap<CalendarEvent, UpcomingEventDto>()
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(e => e.Participants.Count))
-                .ForMember(dest => dest.ParticipantsId, opt => opt.MapFrom(e => e.Participants.Select(p => p.PersonId)));
+                .ForMember(dest => dest.ParticipantIds, opt => opt.MapFrom(e => e.Participants.Select(p => p.PersonId)));
             CreateMap<ICollection<UpcomingEventDto>, ICollection<CalendarEvent>>();
 
             CreateMap<Person, PersonDto>();
@@ -27,7 +27,9 @@ namespace FunPlannerApi.Automapper
 
             CreateMap<Note, NoteDto>()
                 .ForMember(dest => dest.FromFirstName, opt => opt.MapFrom(e => e.FromPerson.FirstName))
-                .ForMember(dest => dest.FromLastName, opt => opt.MapFrom(e => e.FromPerson.LastName));
+                .ForMember(dest => dest.FromLastName, opt => opt.MapFrom(e => e.FromPerson.LastName))
+                .ForMember(dest => dest.ToLastName, opt => opt.MapFrom(e => e.ToPerson.FirstName))
+                .ForMember(dest => dest.ToFirstName, opt => opt.MapFrom(e => e.ToPerson.LastName));
         }
     }
 }

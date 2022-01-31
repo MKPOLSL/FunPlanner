@@ -23,15 +23,22 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpGet("award/{id}")]
-        public Task<AwardDto> Get(Guid id)
+        public async Task<AwardDto> Get(Guid id)
         {
-            throw new NotImplementedException();
+            var award = await Context.Set<Award>()
+                 .Include(a => a.CalendarEvent)
+                 .FirstOrDefaultAsync(a => a.Id == id);
+            return Mapper.Map<AwardDto>(award);
         }
 
         [HttpGet("/award")]
-        public Task<ICollection<AwardDto>> GetAll()
+        public async Task<ICollection<AwardDto>> GetAll()
         {
-            throw new NotImplementedException();
+            var award = await Context.Set<Award>()
+                .Include(a => a.CalendarEvent)
+                .ToListAsync();
+
+            return Mapper.Map<ICollection<AwardDto>>(award);
         }
 
         [HttpPost("/award")]
@@ -53,9 +60,22 @@ namespace FunPlannerApi.Controllers
             var award = await Context.Set<Award>()
                 .Include(a => a.CalendarEvent)
                 .Where(a => a.PersonId == id)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
             return Mapper.Map<ICollection<AwardDto>>(award);
+        }
+
+        [HttpDelete("/award/{id}")]
+        public async Task Delete(Guid id)
+        {
+            var award = await Context.Set<Award>()
+                .FirstOrDefaultAsync(ce => ce.Id == id);
+
+            if (award == null)
+                throw new HttpRequestException("Award not found.");
+
+            Context.Remove(award);
+            await Context.SaveChangesAsync();
         }
     }
 }

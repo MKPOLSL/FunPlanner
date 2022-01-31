@@ -10,6 +10,8 @@ namespace FunPlannerShared.Controllers
         Task<AwardDto> Get(Guid id);
         [Get("/award/get-by-person-id/{id}")]
         Task<ICollection<AwardDto>> GetByPersonId(Guid id);
+        [Delete("/award/{id}")]
+        Task Delete(Guid id);
         [Get("/award")]
         Task<ICollection<AwardDto>> GetAll();
         [Post("/award")]

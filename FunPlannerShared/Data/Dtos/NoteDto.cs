@@ -8,5 +8,7 @@ namespace FunPlannerShared.Data.Dtos
         public Guid PersonId { get; set; }
         public string FromFirstName { get; set; }
         public string FromLastName { get; set; }
+        public string ToFirstName { get; set; }
+        public string ToLastName { get; set; }
     }
 }

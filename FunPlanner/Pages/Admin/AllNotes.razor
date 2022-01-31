@@ -1,0 +1,103 @@
+﻿@page "/all-notes"
+@using System.Net.Http.Json
+@using Blazored.LocalStorage
+@using FunPlanner.Components
+@using FunPlanner.Models
+@using FunPlannerShared.Controllers
+@using FunPlannerShared.Data.Dtos
+@using FunPlannerShared.Data.Entities
+@inject IPersonController personController
+@inject INoteController noteController
+@inject IAwardController awardController
+@inject ILocalStorageService storage
+@inject HttpClient httpClient
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Moje osiągnięcia</MudText>
+<MudDivider />
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudGrid Spacing="2" Justify="Justify.Center">
+            <MudItem xs="6">
+                <MudPaper Class="d-flex flex-column" Style="height:78vh;">
+                    <MudText Align="Align.Center" Typo="Typo.h5">Notatki</MudText>
+                    <MudDivider />
+                    <div class="pa-4 overflow-auto">
+                        @if (notes != null && notes.Any())
+                        {
+                            foreach (var n in notes)
+                            {
+                                <MudCard Class="mb-2">
+                                    <MudCardContent>
+                                        <MudText>@n.Content</MudText>
+                                        <MudText Typo="Typo.subtitle2">Notatka od: @n.FromFirstName @n.FromLastName</MudText>
+                                        <MudText Typo="Typo.subtitle2">Notatka dla: @n.ToFirstName @n.ToLastName</MudText>
+                                        <MudButton Size="Size.Small" OnClick="() => DeleteNote(n.Id)" Variant="Variant.Filled"  Color="Color.Primary">Usuń notatkę</MudButton> 
+                                    </MudCardContent>
+                                </MudCard>
+                            }
+                        }
+                        else
+                        {
+                            <MudText>Brak notatek</MudText>
+                        }
+                    </div>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="6">
+                <MudPaper Class="d-flex flex-column" Style="height:78vh;">
+                    <MudText Align="Align.Center" Typo="Typo.h5">Nagrody</MudText>
+                    <MudDivider />
+                    <div class="pa-4 overflow-auto">
+                        @if (awards != null && awards.Any())
+                        {
+                            foreach (var a in awards)
+                            {
+                                <MudCard Class="mb-2">
+                                    <MudCardContent>
+                                        <MudText>@a.AwardType</MudText>
+                                        <MudText Typo="Typo.subtitle2">nagroda za wydarzenie: @a.CalendarEventName</MudText>
+                                        <MudButton Size="Size.Small" OnClick="() => DeleteAward(a.Id)" Variant="Variant.Filled"  Color="Color.Primary">Usuń nagrodę</MudButton> 
+                                    </MudCardContent>
+                                </MudCard>
+                            }
+                        }
+                        else
+                        {
+                            <MudText>Brak nagród</MudText>
+                        }
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private ICollection<AwardDto> awards = new List<AwardDto>();
+    private ICollection<NoteDto> notes = new List<NoteDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        awards = await awardController.GetAll();
+        notes = await noteController.GetAll();
+    }
+
+    private async Task DeleteAward(Guid awardId)
+    {
+        await awardController.Delete(awardId);
+        Snackbar.Add("Usunięto nagrodę!", Severity.Success);
+        awards = await awardController.GetAll();
+        StateHasChanged();
+    }
+
+    private async Task DeleteNote(Guid noteId)
+    {
+        await noteController.Delete(noteId);
+        Snackbar.Add("Usunięto notatkę!", Severity.Success);
+        notes = await noteController.GetAll();
+        StateHasChanged();
+    }
+}

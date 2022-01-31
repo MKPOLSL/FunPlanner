@@ -2,9 +2,7 @@
 @using FunPlannerShared.Controllers
 @using FunPlannerShared.Data.Dtos
 @inject IEventController eventController
-@*@inject ICalendarEventsProvider eventsProvider*@
 
-<!-- Calendar -->
 <div class="calendar">
     <div class="d-flex">
         <MudButton Variant="Variant.Text" StartIcon="@Icons.Filled.ChevronLeft" OnClick="() => MoveMonth(MoveDirection.Previous)">@selectedDate.AddMonths(-1).ToString("Y")</MudButton>
@@ -83,9 +81,7 @@
 
     [Parameter]
     public RenderFragment<Day> DayTemplate { get; set; }
-
     private ICollection<CalendarEventCalendarDto> Events { get; set; }
-
     private List<Day> days = new();
     private int rowsCount = 0;
 
@@ -123,7 +119,7 @@
                 });
         }
 
-        //calcualte number of rows
+        //calculate number of rows
         int remaning = days.Count % 7;
         if (remaning == 0)
             rowsCount = days.Count / 7;
@@ -131,7 +127,6 @@
             rowsCount = Convert.ToInt32(days.Count / 7) + 1;
 
         StateHasChanged();
-        Console.WriteLine($"Total Rows: {rowsCount} | Number of Empty Days {numberOfEmptyDays} | Month Days {numberOfDaysInMonth}");
     }
 
     private void MoveMonth(MoveDirection direction)

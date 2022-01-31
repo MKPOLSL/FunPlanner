@@ -16,5 +16,6 @@ namespace FunPlannerShared.Data.Dtos
         public int? Limit { get; set; }
         public string Place { get; set; }
         public ICollection<PersonDto> Participants { get; set; }
+        public PersonDto Creator { get; set; }
     }
 }

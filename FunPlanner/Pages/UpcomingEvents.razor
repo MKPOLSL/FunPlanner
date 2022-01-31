@@ -60,7 +60,7 @@
 			</div>
 		</div>
 		<div class="column">
-			<MudButton Color="Color.Primary" Disabled="context.ParticipantsId.Contains(user.Id)" OnClick="async () => await AddPersonToEvent(context.Id)" class="button" Variant="Variant.Filled">Zapisz mnie!</MudButton>
+			<MudButton Color="Color.Primary" Disabled="context.ParticipantIds.Contains(user.Id)" OnClick="async () => await AddPersonToEvent(context.Id)" class="button" Variant="Variant.Filled">Zapisz mnie!</MudButton>
 		</div>
 	</div>
 

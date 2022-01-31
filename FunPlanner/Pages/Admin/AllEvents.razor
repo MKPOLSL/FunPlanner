@@ -1,4 +1,4 @@
-﻿@page "/my-events"
+﻿@page "/all-events"
 @using Blazored.LocalStorage
 @using FunPlanner.Components
 @using FunPlanner.Models
@@ -11,22 +11,23 @@
 @inject IEventController eventContoller
 @inject IDialogService DialogService
 @inject ILocalStorageService storage
+@inject ISnackbar Snackbar
 
 <PageTitle>My Events</PageTitle>
-<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Moje wydarzenia</MudText> <MudDivider />
+<MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Wszystkie wydarzenia</MudText> <MudDivider />
 
 <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nazwa</MudTh>
-        <MudTh>Opis</MudTh>
+        <MudTh>Twórca</MudTh>
         <MudTh>Start</MudTh>
         <MudTh>Koniec</MudTh>
         <MudTh>Status</MudTh>
-        <MudTh>Przyznaj nagrodę</MudTh>
+        <MudTh>Usuń wydarzenie</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Nazwa">@context.Name</MudTd>
-        <MudTd DataLabel="Opis">@context.Description</MudTd>
+        <MudTd DataLabel="Twórca">@context.Creator.FirstName @context.Creator.LastName</MudTd>
         <MudTd DataLabel="Start" HideSmall="_hidePosition">@context.Start.ToString("f")</MudTd>
         <MudTd DataLabel="Koniec">@context.End.ToString("f")</MudTd>
         <MudTd DataLabel="Status">
@@ -43,19 +44,8 @@
                 <MudChip Color="Color.Error">Zakończone</MudChip>
             } 
         </MudTd>
-        <MudTd DataLabel="Nagroda">
-        @if (context.End > DateTime.Now)
-        {
-                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Nie zakończono</MudButton>
-            }
-            else if(context.Award != null)
-            {
-                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Już przyznano</MudButton>
-            }
-            else
-        {
-           <MudButton Size="Size.Small" OnClick="() => AddAward(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Przyznaj nagrodę</MudButton> 
-        }
+        <MudTd DataLabel="Usunąć wydarzenie?">
+           <MudButton Size="Size.Small" OnClick="() => DeleteEvent(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Usuń wydarzenie</MudButton> 
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -69,19 +59,12 @@
     {
         UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
         Elements = await eventContoller.Get();
-        //Elements = Elements.Where(e => e.CreatorId == userDto.Id).ToList();
     }
 
-    private async Task AddAward(Guid eventId)
+    private async Task DeleteEvent(Guid eventId)
     {
-        var parameters = new DialogParameters();
-        parameters.Add("eventId", eventId);
-        var dialog = DialogService.Show<AddAwardDialog>("Dodaj nagrodę", parameters, new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true });
-        var result = await dialog.Result;
-        if (!result.Cancelled)
-        {
-            Elements = await eventContoller.Get();
-            StateHasChanged();
-        }
+        await eventContoller.Delete(eventId);
+
+        Snackbar.Add("Usunięto wydarzenie!", Severity.Success);
     }
 }

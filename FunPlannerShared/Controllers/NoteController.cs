@@ -17,5 +17,8 @@ namespace FunPlannerShared.Controllers
 
         [Post("/note")]
         Task AddNote(Guid FromPersonId, Guid ToPersonId, string note);
+
+        [Delete("/note/{id}")]
+        Task Delete(Guid id);
     }
 }

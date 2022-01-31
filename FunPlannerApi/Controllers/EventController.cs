@@ -5,11 +5,6 @@ using FunPlannerShared.Data.Dtos;
 using FunPlannerShared.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FunPlannerApi.Controllers
 {
@@ -35,15 +30,19 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpGet(Name = "GetEvents")]
-        public async Task<ICollection<CalendarEvent>> Get()
+        public async Task<ICollection<CalendarEventDto>> Get()
         {
-            return await Context.Set<CalendarEvent>().OrderByDescending(o => o.Start).ToListAsync();
+            var events = await Context.Set<CalendarEvent>().
+                OrderByDescending(o => o.Start)
+                .Include(e => e.Creator)
+                .ToListAsync();
+            return Mapper.Map<ICollection<CalendarEventDto>>(events);
         }
 
         [HttpGet("/event/upcoming", Name = "Upcoming")]
         public async Task<ICollection<UpcomingEventDto>> GetUpcoming()
         {
-            ICollection<CalendarEvent> events =  
+            ICollection<CalendarEvent> events =
                 await Context.Set<CalendarEvent>()
                 .Where(e => e.Start > DateTime.Now)
                 .OrderBy(e => e.Start)
@@ -67,11 +66,19 @@ namespace FunPlannerApi.Controllers
                 .Where(e => e.Id == eventId)
                 .Include(e => e.Participants)
                 .OrderBy(e => e.Start).FirstOrDefaultAsync();
+
+            var personToAssign = await Context.Set<Person>()
+                .Where(e => e.Id == personId)
+                .FirstOrDefaultAsync();
+
             if (eventToAssign == null)
                 throw new HttpRequestException("Event not found.");
 
-            if(eventToAssign.Participants.Select(p => p.PersonId).Contains(personId))
-                    throw new HttpRequestException("Already assigned to event!");
+            if (personToAssign == null)
+                throw new HttpRequestException("Person not found.");
+
+            if (eventToAssign.Participants.Select(p => p.PersonId).Contains(personId))
+                throw new HttpRequestException("Already assigned to event!");
 
             var eventParticipants = new EventParticipants
             {
@@ -90,9 +97,16 @@ namespace FunPlannerApi.Controllers
         }
 
         [HttpDelete("/event/{id}")]
-        public Task Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var calendarEvent = await Context.Set<CalendarEvent>()
+                .FirstOrDefaultAsync(ce => ce.Id == id);
+
+            if (calendarEvent == null)
+                throw new HttpRequestException("Event not found.");
+
+            Context.Remove(calendarEvent);
+            await Context.SaveChangesAsync();
         }
 
         [HttpGet("/event/{id}/participants")]
