@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FunPlanner.Models
+﻿namespace FunPlanner.Models
 {
     public class UserLoginDto
     {

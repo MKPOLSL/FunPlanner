@@ -4,8 +4,6 @@ using FunPlannerShared.Controllers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.EntityFrameworkCore;
-using MudBlazor;
 using MudBlazor.Services;
 using Refit;
 
@@ -18,12 +16,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<UserAuthorizationService>();
 builder.Services.AddBlazoredLocalStorage();
-//builder.Services.AddApiAuthorization();
 
 builder.Services.AddOidcAuthentication(options =>
 {
-    // Configure your authentication provider options here.
-    // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("Local", options.ProviderOptions);
 });
 

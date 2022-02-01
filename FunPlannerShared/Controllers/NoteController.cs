@@ -1,5 +1,4 @@
 ﻿using FunPlannerShared.Data.Dtos;
-using FunPlannerShared.Data.Entities;
 using Refit;
 
 namespace FunPlannerShared.Controllers
@@ -8,9 +7,6 @@ namespace FunPlannerShared.Controllers
     {
         [Get("/note")]
         Task<ICollection<NoteDto>> GetAll();
-
-        [Get("/note/{id}")]
-        Task<NoteDto> Get(Guid id);
 
         [Get("/note/get-by-person-id/{id}")]
         Task<ICollection<NoteDto>> GetAllByPersonId(Guid id);

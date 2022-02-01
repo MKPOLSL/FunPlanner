@@ -38,7 +38,9 @@ namespace FunPlannerApi.Controllers
         [HttpGet("{firstName}-{lastName}", Name = "GetPersonByName")]
         public async Task<Person> GetByName(string firstName, string lastName)
         {
-            return await Context.Set<Person>().Where(p => firstName == firstName && lastName == lastName).FirstOrDefaultAsync();
+            return await Context.Set<Person>()
+                .Where(p => firstName == firstName && lastName == lastName)
+                .FirstOrDefaultAsync();
         }
 
         [HttpGet("/person/Get-by-email/{email}", Name = "GetPersonByEmail")]

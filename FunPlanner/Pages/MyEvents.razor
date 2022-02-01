@@ -45,17 +45,21 @@
         </MudTd>
         <MudTd DataLabel="Nagroda">
         @if (context.End > DateTime.Now)
-        {
+            {
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Nie zakończono</MudButton>
             }
             else if(context.Award != null)
             {
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Już przyznano</MudButton>
             }
+            else if(context.Participants.Any())
+            {
+                <MudButton Size="Size.Small" OnClick="() => AddAward(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Przyznaj nagrodę</MudButton>
+            }
             else
-        {
-           <MudButton Size="Size.Small" OnClick="() => AddAward(context.Id)" Variant="Variant.Filled"  Color="Color.Primary">Przyznaj nagrodę</MudButton> 
-        }
+            {
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="true" Color="Color.Primary">Brak uczestników</MudButton>
+            }
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -69,7 +73,7 @@
     {
         UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
         Elements = await eventContoller.Get();
-        //Elements = Elements.Where(e => e.CreatorId == userDto.Id).ToList();
+        Elements = Elements.Where(e => e.Creator.Id == userDto.Id).ToList();
     }
 
     private async Task AddAward(Guid eventId)

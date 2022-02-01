@@ -44,12 +44,6 @@ namespace FunPlannerApi.Controllers
             return Mapper.Map<ICollection<NoteDto>>(notes);
         }
 
-        [HttpGet("/note/{id}")]
-        public Task<NoteDto> Get(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet("/note/get-by-person-id/{id}")]
         public async Task<ICollection<NoteDto>> GetAllByPersonId(Guid id)
         {

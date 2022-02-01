@@ -16,7 +16,7 @@
 <PageTitle>My Events</PageTitle>
 <MudText Class="mb-3" Align="Align.Left" Typo="Typo.h4">Wszystkie wydarzenia</MudText> <MudDivider />
 
-<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+<MudTable Items="@elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nazwa</MudTh>
         <MudTh>Twórca</MudTh>
@@ -28,7 +28,7 @@
     <RowTemplate>
         <MudTd DataLabel="Nazwa">@context.Name</MudTd>
         <MudTd DataLabel="Twórca">@context.Creator.FirstName @context.Creator.LastName</MudTd>
-        <MudTd DataLabel="Start" HideSmall="_hidePosition">@context.Start.ToString("f")</MudTd>
+        <MudTd DataLabel="Start" HideSmall="hidePosition">@context.Start.ToString("f")</MudTd>
         <MudTd DataLabel="Koniec">@context.End.ToString("f")</MudTd>
         <MudTd DataLabel="Status">
             @if (context.End > DateTime.Now && context.Start < DateTime.Now)
@@ -51,14 +51,14 @@
 </MudTable>
 
 @code {
-    private bool _hidePosition = false;
-    private bool _loading;
-    private ICollection<CalendarEventDto> Elements = new List<CalendarEventDto>();
+    private bool hidePosition = false;
+    private bool loading;
+    private ICollection<CalendarEventDto> elements = new List<CalendarEventDto>();
 
     protected override async Task OnInitializedAsync()
     {
         UserStorageDto userDto = await storage.GetItemAsync<UserStorageDto>("user").AsTask();
-        Elements = await eventContoller.Get();
+        elements = await eventContoller.Get();
     }
 
     private async Task DeleteEvent(Guid eventId)
@@ -66,5 +66,7 @@
         await eventContoller.Delete(eventId);
 
         Snackbar.Add("Usunięto wydarzenie!", Severity.Success);
+        elements = await eventContoller.Get();
+        StateHasChanged();
     }
 }

@@ -8,9 +8,7 @@ namespace FunPlannerShared.Data.Dtos
         public string Description { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-
         public AwardDto? Award { get; set; }
-
         public bool EventRegistration { get; set; }
         public bool IsLimited { get; set; }
         public int? Limit { get; set; }

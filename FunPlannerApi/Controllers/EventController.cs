@@ -35,6 +35,8 @@ namespace FunPlannerApi.Controllers
             var events = await Context.Set<CalendarEvent>().
                 OrderByDescending(o => o.Start)
                 .Include(e => e.Creator)
+                .Include(e => e.Award)
+                .Include(e => e.Participants)
                 .ToListAsync();
             return Mapper.Map<ICollection<CalendarEventDto>>(events);
         }

@@ -5,28 +5,28 @@
     position: relative;
 }
 
-    .day.current-day {
-        background-color: var(--mud-palette-primary-x-light);
-    }
+.day.current-day {
+    background-color: var(--mud-palette-primary-x-light);
+}
 
-    .day.selected-day {
-        background-color: var(--mud-palette-primary);
-        color: var(--mud-palette-primary-text);
-    }
+.day.selected-day {
+    background-color: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+}
 
-    .day .day-event {
-        background-color: var(--mud-palette-secondary);
-        border: 2px solid var(--mud-palette-secondary-darken);
-        color: var(--mud-palette-secondary-text);
-        border-radius: 2px;
-    }
+.day .day-event {
+    background-color: var(--mud-palette-secondary);
+    border: 2px solid var(--mud-palette-secondary-darken);
+    color: var(--mud-palette-secondary-text);
+    border-radius: 2px;
+}
 
-    .day .day-add-event-btn {
-        position: absolute;
-        bottom: 0.2rem;
-        right: 0.2rem;
-    }
+.day .day-add-event-btn {
+    position: absolute;
+    bottom: 0.2rem;
+    right: 0.2rem;
+}
 
-    .day:not(:hover) .day-add-event-btn {
-        display: none;
-    }
+.day:not(:hover) .day-add-event-btn {
+    display: none;
+}

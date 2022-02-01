@@ -81,9 +81,4 @@
         awards = await awardController.GetByPersonId(userDto.Id);
         notes = await noteController.GetAllByPersonId(userDto.Id);
     }
-
-    private async Task AddNote(Guid personId)
-    {
-
-    }
 }
